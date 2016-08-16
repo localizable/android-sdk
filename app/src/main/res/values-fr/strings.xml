@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Localizable</string>
+    <string name="action_settings">Le Preferences</string>
+    <string name="goodbye">Adieu</string>
+    <string name="hello">Salut</string>
+    <string name="poop">Le poop!!!! CELINHO</string>
+</resources>
