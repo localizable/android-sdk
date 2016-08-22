@@ -1,2 +1,1 @@
-include ':app', ':localizableplugin'
-project(':localizableplugin').projectDir = new File('plugin')
+include ':example-app', ':plugin'

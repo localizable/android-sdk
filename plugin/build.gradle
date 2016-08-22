@@ -1,38 +1,43 @@
-apply plugin: 'groovy'
-
-dependencies {
-    compile gradleApi()
-    compile localGroovy()
-}
-
+apply plugin: "kotlin"
 apply plugin: 'maven'
-
-group = 'com.crashlytics.examples.gradle'
-// looks odd, but pulls the version from the property defined in gradle.properties
-version = version
-String artifactId = 'preprocessor'
 
 repositories {
     mavenCentral()
+    mavenLocal()
 }
 
 configurations {
     includeInJar
 }
 
+groupId = "io.localizable"
+version = "1.0.0"
+artifactId = "localizable"
+
 dependencies {
     testCompile 'junit:junit:4.11'
-    compile 'org.codehaus.groovy.modules.http-builder:http-builder:0.7'
+    compile gradleApi()
+    compile 'com.android.tools.build:gradle:2.1.3'
+    compile "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
 }
 
-install {
-    repositories.mavenInstaller {
-        pom.version = project.version
-        pom.artifactId = artifactId
+uploadArchives {
+    repositories {
+        mavenDeployer {
+            repository(url: mavenLocal().url)
+            pom.groupId = groupId
+            pom.artifactId = artifactId
+            pom.version = version
+        }
     }
 }
 
-
-jar {
-
+buildscript {
+    ext.kotlin_version = '1.0.3'
+    repositories {
+        mavenCentral()
+    }
+    dependencies {
+        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
+    }
 }
