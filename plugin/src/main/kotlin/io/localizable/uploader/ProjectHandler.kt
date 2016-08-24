@@ -4,9 +4,11 @@ import com.android.build.gradle.AppExtension
 import com.android.build.gradle.AppPlugin
 import com.android.build.gradle.internal.dsl.BuildType
 import io.localizable.uploader.helper.LocalizableHelper
+import io.localizable.uploader.xml.ManifestFileHandler
 import org.gradle.api.Project
 import org.gradle.api.Task
 import org.gradle.api.tasks.TaskContainer
+import org.gradle.api.tasks.TaskOutputs
 
 class ProjectHandler(val project: Project) {
 
@@ -38,12 +40,18 @@ class ProjectHandler(val project: Project) {
         tasks.whenTaskAdded { handleTask(it) }
     }
 
-    private fun createLocalizableFromTask(task: Task, taskAffix: String) {
+    private fun createLocalizableFromTask(task: Task, taskAffix: String, buildName: String, flavorName: String) {
         val localizableTaskName = "localizable$taskAffix"
         val nTask = project.task(localizableTaskName)
 
         nTask.doFirst {
-            LocalizableTask(project, localizableTaskName).syncResources()
+            val manifest = LocalizableHelper.manifestFileForTarget(project, buildName, flavorName)
+            if (manifest == null) {
+                println("Could not find any manifest file")
+              return@doFirst
+            }
+
+          nTask.didWork = LocalizableTask(project, manifest, localizableTaskName).syncResources()
         }
 
         task.dependsOn(nTask)
@@ -56,7 +64,7 @@ class ProjectHandler(val project: Project) {
         val processTask = "process${taskAffix}Resources"
 
         if (processTask.equals(task.name)) {
-            createLocalizableFromTask(task, taskAffix)
+            createLocalizableFromTask(task, taskAffix, buildName, flavorName)
         }
     }
 
@@ -68,14 +76,3 @@ class ProjectHandler(val project: Project) {
         }
     }
 }
-
-
-
-
-
-
-
-
-
-
-

@@ -4,12 +4,16 @@ import io.localizable.uploader.extensions.resourcesFolders
 import io.localizable.uploader.helper.LocalizableHelper
 import io.localizable.uploader.helper.loadFile
 import io.localizable.uploader.helper.storeToFile
-import io.localizable.uploader.model.LanguageStrings
-import io.localizable.uploader.model.ResourceFolder
+import io.localizable.uploader.model.*
+import io.localizable.uploader.networking.Network
+import io.localizable.uploader.xml.ManifestFileHandler
 import org.gradle.api.Project
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 import java.io.File
 
-class LocalizableTask(val project: Project, val taskName: String) {
+class LocalizableTask(val project: Project, val manifest: ManifestFileHandler, val taskName: String) {
 
   private val valueFiles: List<ResourceFolder> by lazy {
     project.resourcesFolders()
@@ -18,9 +22,6 @@ class LocalizableTask(val project: Project, val taskName: String) {
           ResourceFolder(folder, language)
         }
   }
-
-
-
 
   private val tmpDirectory: String by lazy {
     val path = "${project.projectDir.absolutePath}/build/intermediates/Localizable/$taskName"
@@ -50,37 +51,55 @@ class LocalizableTask(val project: Project, val taskName: String) {
         .filter { it.strings.count() > 0 }
   }
 
-  private val stringUpdates: List<LanguageStrings> by lazy {
-    projectStringsByLanguage.map { projectStrings ->
-      projectStrings.languageStringsByRemovingRepeated(alreadyUpdatedStringsByLanguage)
-    }.filter { it.strings.count() > 0 }
+  private val projectBaseStrings: List<LocalizedString>? by lazy {
+    projectStringsByLanguage
+        .filter { it.language == ResourceFolder.defaultResourceFolder }
+        .firstOrNull()
+        ?.strings
   }
 
-  private val stringRemovals: List<LanguageStrings> by lazy {
-    alreadyUpdatedStringsByLanguage.map { projectStrings ->
-      projectStrings.languageStringsByRemovingRepeatedKeys(projectStringsByLanguage)
-    }.filter { it.strings.count() > 0 }
+  private val localizedDeltas: List<LanguageDelta> by lazy {
+    LanguageDelta.deltasFromLanguages(projectStringsByLanguage, alreadyUpdatedStringsByLanguage)
   }
 
-  fun syncResources() {
-    if (stringUpdates.count() == 0 && stringRemovals.count() == 0) {
-      println("UP-TO-DATE")
-      return
+  private val localizableApp: App by lazy {
+    App.createFromManifest(manifest, projectBaseStrings)
+  }
+
+  private val localizableServiceObject: UploadStringsRequestBody by lazy {
+    UploadStringsRequestBody(localizedDeltas, localizableApp)
+  }
+
+  fun syncResources(): Boolean {
+    if (localizedDeltas.isEmpty()) {
+      return false
     }
 
-    stringUpdates.forEach {
-      println("UPDATE -> $it")
-    }
+    try {
+      Network.service.UploadLanguages(manifest.localizableToken, localizableServiceObject).enqueue(object : Callback<Void> {
+        override fun onFailure(call: Call<Void>?, t: Throwable?) {
+          println("Error updating strings")
+          t?.printStackTrace()
+        }
 
-    stringRemovals.forEach {
-      println("REMOVAL -> $it")
+        override fun onResponse(call: Call<Void>?, response: Response<Void>?) {
+          response?.let {
+            if (it.isSuccessful) {
+              cacheStringsByLanguage()
+            } else {
+              println("Error contacting server ${it.headers()}")
+            }
+          }
+        }
+      })
+    } catch (e: Exception) {
+      e.printStackTrace()
+    } finally {
+      return true
     }
-
-    cacheStringsByLanguage()
   }
 
   private fun cacheStringsByLanguage() {
     storeToFile(tmpFilePath, projectStringsByLanguage)
   }
-
 }
