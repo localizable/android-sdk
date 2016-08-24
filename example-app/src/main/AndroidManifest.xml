@@ -9,6 +9,11 @@
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+
+        <meta-data
+            android:name="io.localizable.SDK_TOKEN"
+            android:value="8EGEUAqXEanxdmuSYO2d_g"/>
+
         <activity
             android:name=".MainActivity"
             android:label="@string/app_name"
