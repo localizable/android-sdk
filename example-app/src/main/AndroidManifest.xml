@@ -12,7 +12,7 @@
 
         <meta-data
             android:name="io.localizable.SDK_TOKEN"
-            android:value="8EGEUAqXEanxdmuSYO2d_g"/>
+            android:value="abc123"/>
 
         <activity
             android:name=".MainActivity"
