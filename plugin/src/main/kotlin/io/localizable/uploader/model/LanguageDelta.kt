@@ -3,19 +3,19 @@ package io.localizable.uploader.model
 class LanguageDelta(languageCode: String, updatedStrings: List<LocalizedString>, removedStrings: List<LocalizedString>) {
 
   var code: String
-  var updated: Map<String, String>
-  var removed: List<String>
+  var update: Map<String, String>
+  var remove: List<String>
 
   init {
     this.code = languageCode
-    this.removed = removedStrings.map { it.key }
+    this.remove = removedStrings.map { it.key }
     val map: MutableMap<String, String> = mutableMapOf()
     updatedStrings.forEach { localizedString ->
       localizedString .value?.let { value ->
         map[localizedString .key] = value
       }
     }
-    this.updated = map
+    this.update = map
   }
 
   companion object {

@@ -1,44 +1,53 @@
 apply plugin: 'com.android.application'
 
 buildscript {
-    repositories {
-        mavenCentral()
-        mavenLocal()
+  repositories {
+    mavenCentral()
+    mavenLocal()
+  }
 
-    }
-    dependencies {
-        classpath 'io.localizable:localizable:1.0.0'
-    }
+  dependencies {
+    classpath 'io.localizable:localizable:1.0.0'
+  }
 }
 
 apply plugin: 'localizable.uploader'
 
 android {
-    compileSdkVersion 24
-    buildToolsVersion "24.0.2"
-    defaultConfig {
-        applicationId "vc.faber.localizable"
-        minSdkVersion 21
-        targetSdkVersion 24
-        versionCode 1
-        versionName "1.0"
-    }
+  compileSdkVersion 24
+  buildToolsVersion "24.0.2"
+  defaultConfig {
+    applicationId "io.localizable.demo"
+    minSdkVersion 19
+    targetSdkVersion 24
+    versionCode 1
+    versionName "1.0"
+  }
 
-    buildTypes {
-        release {
-            minifyEnabled false
-            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
-        }
+  buildTypes {
+    release {
+      minifyEnabled false
+      proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
     }
+  }
 
-    productFlavors {
-        epic { }
-    }
+  productFlavors {
+    epic { }
+  }
 }
 
 dependencies {
-    compile fileTree(dir: 'libs', include: ['*.jar'])
-    testCompile 'junit:junit:4.12'
-    compile 'com.android.support:appcompat-v7:24.2.0'
-    compile 'com.android.support:design:24.2.0'
+  compile fileTree(dir: 'libs', include: ['*.jar'])
+  testCompile 'junit:junit:4.12'
+  compile 'com.android.support:support-v4:24.2.0'
+  compile 'com.android.support:appcompat-v7:24.2.0'
+  compile 'com.android.support:design:24.2.0'
+  compile 'com.squareup.okhttp3:okhttp:3.4.1'
+
+  //compile 'io.localizable:sdk:1.0.0'
+
+  provided "com.google.code.findbugs:jsr305:3.0.0"
+  provided "javax.annotation:javax.annotation-api:1.2"
+  compile 'org.jetbrains:annotations-java5:15.0'
+
 }
