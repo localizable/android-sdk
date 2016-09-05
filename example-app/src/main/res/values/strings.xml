@@ -3,6 +3,7 @@
     <string name="action_settings">Settings</string>
     <string name="hello">Hello</string>
     <string name="goodbye">Goodbye</string>
-    <string name="poop">Poop</string>
+    <string name="poop">Poop Default</string>
     <string name="poop2" translatable="false">PoopAAAA</string>
+    <string name="greeting_message">Hello %1$s!</string>
 </resources>

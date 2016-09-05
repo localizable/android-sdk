@@ -6,32 +6,71 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.HashMap;
 
-import io.localizable.demo.sdk.exceptions.MethodNotImplementedException;
 import io.localizable.demo.sdk.networking.async.HttpRequest;
 import io.localizable.demo.sdk.utils.LocalizableLog;
 
-public class HttpOperation {
+/**
+ * Base HttpOperation
+ *
+ * Contains all components of a Http request
+ *
+ * Headers - Custom headers and customizable user-agent
+ *
+ * RequestType - Only GET, PUT or POST supported for now
+ *
+ * Parameters - Automatic add parameters to URL if is a GET or send them as Body if the request is
+ * a POST or PUT
+ *
+ * Path - path to append to the base endpoint
+ *
+ */
+abstract public class HttpOperation {
 
-  protected String getBaseEndpoint() {
-    LocalizableLog.error("Base endpoint not implemented");
-    return null;
-  }
 
+  /**
+   * Endpoint to append the path and parameters
+   *
+   * @return The base endpoint to the request
+   */
+  abstract protected String getBaseEndpoint();
+
+
+  /**
+   * User agent to the Request
+   *
+   * @return The user agent or null
+   */
   protected String getUserAgent() {
     LocalizableLog.error("GET User-Agent not implemented");
     return null;
   }
+
 
   private String path;
   private HashMap<String, String> parameters;
   private HttpRequest.NetworkOperationType requestType;
   private HashMap<String, String> headers;
 
+  /**
+   * Constructs the operation without headers
+   *
+   * @param path Path to the request
+   * @param parameters Request parameters
+   * @param requestType Request type - GET/POST/PUT
+   */
   protected HttpOperation(String path, HashMap<String, String> parameters,
                           HttpRequest.NetworkOperationType requestType) {
     this(path, parameters, requestType, null);
   }
 
+  /**
+   * Constructs the operation
+   *
+   * @param path Path to the request
+   * @param parameters Request parameters
+   * @param requestType Request type - GET/POST/PUT
+   * @param headers Headers to add to the request - User-Agent not included
+   */
   protected HttpOperation(String path, HashMap<String, String> parameters,
                           HttpRequest.NetworkOperationType requestType, HashMap<String, String> headers) {
     this.path = path;
@@ -47,6 +86,11 @@ public class HttpOperation {
     }
   }
 
+  /**
+   * Complete url to the operation
+   *
+   * @return Complete operation URL or null if the generated URL is invalid
+   */
   public URL getURL() {
     try {
       StringBuilder completeURLBuilder = new StringBuilder();
@@ -70,23 +114,49 @@ public class HttpOperation {
     }
   }
 
+  /**
+   * Operation parameters as JSON String
+   *
+   * @return Operation parameters as JSONString or null if no parameters found
+   */
   public String getParameters() {
     if (parameters == null)
       return null;
-
     return new JSONObject(parameters).toString();
   }
 
+  /**
+   *  Network request type
+   * @return GET PUT POST
+   */
   public HttpRequest.NetworkOperationType getRequestType() {
     return requestType;
   }
 
+  /**
+   * Operation headers
+   * @return returns the operation headers including defined user agent
+   */
   public HashMap<String, String> getHeaders() {
     return headers;
   }
 
+  /**
+   * String representation of the Operation - currently showing request as a Curl command
+   *
+   * @return String representation of the Request
+   */
   @Override
   public String toString() {
+    return curlRepresentation();
+  }
+
+  /**
+   * Curl representation of the Operation
+   *
+   * @return the Curl command to run the request
+   */
+  private String curlRepresentation() {
     StringBuilder builder = new StringBuilder();
     builder.append("curl");
     switch (getRequestType()) {
@@ -110,7 +180,6 @@ public class HttpOperation {
     }
     builder.append(" ").append(getURL().toString());
     return builder.toString();
-
   }
 }
 

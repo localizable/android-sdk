@@ -4,5 +4,6 @@
     <string name="action_settings">Preferencias</string>
     <string name="goodbye">Adeus</string>
     <string name="hello">Ola</string>
-    <string name="poop">Cagalhão</string>
+    <string name="poop">CagalhãoPT</string>
+    <string name="greeting_message">Bem-vindo %1$s!</string>
 </resources>

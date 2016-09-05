@@ -28,7 +28,7 @@ public class ManifestUtils {
      * in the AndroidManifest.xml file.
      */
     @Nonnull
-    public static String getAPITokenFromMetadata(Context context) throws NoSDKTokenFoundException {
+    public static String getAPITokenFromMetadata(Context context) throws NoSDKTokenFoundException, PackageManager.NameNotFoundException {
         String apiToken = getMetadataString(context, SDK_TOKEN_METADATA_KEY);
         if (apiToken == null) {
             throw new NoSDKTokenFoundException();
@@ -37,15 +37,10 @@ public class ManifestUtils {
     }
 
     @Nullable
-    private static String getMetadataString(@Nonnull Context context, @Nonnull String key) {
-        try {
+    private static String getMetadataString(@Nonnull Context context, @Nonnull String key) throws PackageManager.NameNotFoundException {
             ApplicationInfo applicationInfo = context.getPackageManager()
                     .getApplicationInfo(context.getPackageName(), PackageManager.GET_META_DATA);
             return applicationInfo.metaData.getString(key);
-        } catch (PackageManager.NameNotFoundException nameNotFoundException) {
-
-        }
-        return null;
     }
 
 }
