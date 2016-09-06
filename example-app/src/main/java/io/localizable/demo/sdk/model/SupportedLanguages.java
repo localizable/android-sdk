@@ -67,7 +67,7 @@ public class SupportedLanguages implements Serializable {
   }
 
   private void sync(final Context context, String apiToken) {
-    HttpOperation operation = LocalizableOperation.LanguageCodes(apiToken);
+    HttpOperation operation = LocalizableOperation.languageCodes(apiToken);
     new HttpRequest(operation).execute(new SupportedLanguagesCallback() {
 
       @Override
@@ -128,8 +128,8 @@ public class SupportedLanguages implements Serializable {
       }
     }
 
-    if (localizableLocales.contains(Localizable.Constants.DEFAULT_LANGUAGE_CODE)) {
-      return Localizable.Constants.DEFAULT_LANGUAGE_CODE;
+    if (localizableLocales.contains(Localizable.Constants.LOCALIZABLE_DEFAULT_LANGUAGE_CODE)) {
+      return Localizable.Constants.LOCALIZABLE_DEFAULT_LANGUAGE_CODE;
     }
 
     LocalizableLog.error("Could not find any matching languages from user selected languages");
@@ -236,7 +236,7 @@ public class SupportedLanguages implements Serializable {
    */
   private static String findLocaleCountryVariantInList(List<String> localeCodes, Locale locale) {
     for (String localCode: localeCodes) {
-      if (localCode.toLowerCase().startsWith(locale.getCountry().toLowerCase())) {
+      if (localCode.toLowerCase().startsWith(locale.getLanguage().toLowerCase())) {
         return localCode;
       }
     }

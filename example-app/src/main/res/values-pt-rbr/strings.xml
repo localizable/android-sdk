@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Localizable</string>
+    <string name="action_settings">Preferencias</string>
+    <string name="goodbye">Adeus</string>
+    <string name="hello">Ola</string>
+    <string name="poop">CagalhãoPT</string>
+    <string name="greeting_message">Bem-vindo Galera %1$s!</string>
+</resources>

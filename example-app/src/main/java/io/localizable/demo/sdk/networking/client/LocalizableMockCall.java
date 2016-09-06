@@ -10,31 +10,31 @@ import okhttp3.Request;
 import okhttp3.Response;
 
 /**
- * Call Used by localizable Mock client to return sample JSONs instead of the Network requests
+ * Call Used by localizable Mock client to return sample JSONs instead of the Network requests.
  */
 class LocalizableMockCall implements Call {
 
   /**
-   * Request that originated the Call
+   * Request that originated the Call.
    */
   private Request originalRequest;
 
   /**
-   * State of the call
+   * State of the call.
    */
-  boolean executed;
+  private boolean executed;
 
   /**
-   * Call has been canceled
+   * Call has been canceled.
    */
-  boolean canceled;
+  private boolean canceled;
 
   /**
-   * Default constructor for mock call need the request
+   * Default constructor for mock call need the request.
    *
    * @param request Request to execute
    */
-  public LocalizableMockCall(Request request) {
+  LocalizableMockCall(final Request request) {
     this.originalRequest = request;
     this.executed = false;
     this.canceled = false;
@@ -51,15 +51,47 @@ class LocalizableMockCall implements Call {
   }
 
   /**
-   * Enqueue the Request - Simulate an async call and call the Callback
+   * Request was already canceled.
+   *
+   * @return Executed request state
+   */
+  public boolean wasCanceled() {
+    return canceled;
+  }
+
+  /**
+   * Sets the request as canceled.
+   */
+  void cancelRequest() {
+    canceled = true;
+  }
+
+  /**
+   * Request was already executed.
+   *
+   * @return Executed request state
+   */
+  boolean wasExecuted() {
+    return executed;
+  }
+
+  /**
+   * Sets the request as executed.
+   */
+  void finishedExecution() {
+    executed = true;
+  }
+
+  /**
+   * Enqueue the Request - Simulate an async call and call the Callback.
    *
    * @param responseCallback Success/Failure callback
    */
   @Override
   public void enqueue(final Callback responseCallback) {
-    new AsyncTask<Void,Void, Response>() {
+    new AsyncTask<Void, Void, Response>() {
       @Override
-      protected Response doInBackground(Void... voids) {
+      protected Response doInBackground(final Void... voids) {
         try {
           return LocalizableMockCall.this.execute();
         } catch (IOException e) {
@@ -68,8 +100,8 @@ class LocalizableMockCall implements Call {
       }
 
       @Override
-      protected void onPostExecute(Response response) {
-        if (canceled) {
+      protected void onPostExecute(final Response response) {
+        if (wasCanceled()) {
           responseCallback.onFailure(LocalizableMockCall.this, null);
           return;
         }
@@ -83,23 +115,23 @@ class LocalizableMockCall implements Call {
         } else {
           responseCallback.onFailure(LocalizableMockCall.this, null);
         }
-        LocalizableMockCall.this.executed = true;
+        LocalizableMockCall.this.finishedExecution();
       }
     }.execute();
   }
 
   @Override
   public void cancel() {
-    canceled = true;
+    cancelRequest();
   }
 
   @Override
   public boolean isExecuted() {
-    return executed;
+    return wasExecuted();
   }
 
   @Override
   public boolean isCanceled() {
-    return canceled;
+    return wasCanceled();
   }
 }

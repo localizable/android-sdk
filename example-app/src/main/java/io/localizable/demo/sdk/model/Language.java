@@ -13,83 +13,125 @@ import io.localizable.demo.sdk.networking.callback.LocalizableAppLanguageCallbac
 import io.localizable.demo.sdk.utils.LocalizableLog;
 import okhttp3.Call;
 
-import static io.localizable.demo.sdk.model.AppLanguage.*;
+import static io.localizable.demo.sdk.model.AppLanguage.loadAppLanguageFromDisk;
 
-public class Language {
-  String apiToken;
-  String code;
-  SparseArray<String> strings;
-  SparseArray<String> appStrings;
 
-  public Language(SparseArray<String> appStrings, Context context, String apiToken) {
-    this.appStrings = appStrings;
-    this.apiToken = apiToken;
+/**
+ * Control the localized tokens for the current defined localizable language,
+ * Fetches the available languages from the server and selects
+ * the correct one following Google's fallback system from android 7.0,
+ * Updates the strings each time an instance is instantiated,
+ * by diffing changes since last update.
+ */
+public final class Language {
+  /**
+   * Number of milliseconds in a second, to convert Date.getTime() to seconds.
+   */
+  static final long MILLISECONDS_IN_SECOND = 1000;
+
+  /**
+   * Localizable API token.
+   */
+  private String localizableAPIToken;
+
+  /**
+   * Current locale code, example: pt-PT.
+   */
+  private String currentLanguageCode;
+
+  /**
+   * Current localizable string, keys are the R int values and the
+   * values are the server side translations.
+   */
+  private SparseArray<String> localizableStrings;
+
+  /**
+   * Application resource strings, keys are the string "name"
+   * and the values the string R int values.
+   */
+  private SparseArray<String> applicationStrings;
+
+
+  /**
+   * Create a new instance of language, loading cached data if
+   * the current language is the same, and checks for string updates.
+   *
+   * @param appStrings Application strings from resources
+   * @param context Application context
+   * @param apiToken Localizable API token
+   */
+  public Language(final SparseArray<String> appStrings, final Context context, final String apiToken) {
+    applicationStrings = appStrings;
+    localizableAPIToken = apiToken;
     this.loadCachedData(context);
     this.checkForNewSupportedLanguages(context);
   }
 
   /**
-   * Update language code, if the localizable language is the same only triggers a string update,
-   * otherwise will clear current instance of the strings and execute a full request for the
-   * selected language.
+   * Update language code, if the localizable language is the same
+   * only triggers a string update,
+   * otherwise will clear current instance of the strings
+   * and execute a full request for the selected language.
    *
    * @param languageCode New languageCode
    * @param context Application context
    */
-  void setLanguage(String languageCode, Context context) {
-    if (languageCode.equalsIgnoreCase(this.code)) {
+  void setLanguage(final String languageCode, final Context context) {
+    if (languageCode.equalsIgnoreCase(this.currentLanguageCode)) {
       this.syncFromDisk(context);
       return;
     }
-    this.code = languageCode;
-    this.strings = new SparseArray<>();
+    this.currentLanguageCode = languageCode;
+    this.localizableStrings = new SparseArray<>();
     AppLanguage cleanAppLanguage = new AppLanguage(languageCode, new HashMap<String, String>());
     updateStrings(cleanAppLanguage, context);
   }
 
 
   /**
-   * Update current instance with an appLanguage with all the string tokens
+   * Update current instance with an appLanguage with all the string tokens.
    *
    * @param appLanguage AppLanguage to override current instance, code and strings values
    */
-  void updateInstanceWithAppLanguage(AppLanguage appLanguage) {
-    this.code = appLanguage.code;
-    this.strings = sparseArrayFromHashMap(appLanguage.strings, appStrings);
+  void updateInstanceWithAppLanguage(final AppLanguage appLanguage) {
+    this.currentLanguageCode = appLanguage.code;
+    this.localizableStrings = sparseArrayFromHashMap(appLanguage.strings, applicationStrings);
   }
 
 
   /**
    * Creates a SparseArray of Localizable strings with the key being the Int id of the String in the
-   * strings file
+   * strings file.
    *
    * @param strings Localizable strings from Backend (key: string_id, value: string_value)
    * @param appStrings Local App resources sparse array (key: string_id, value: string_resource_id)
-   * @return
+   * @return SparseArray of Localizable strings
    */
-  private static SparseArray<String> sparseArrayFromHashMap(HashMap<String, String> strings,
-                                                            SparseArray<String> appStrings) {
+  private static SparseArray<String> sparseArrayFromHashMap(final HashMap<String, String> strings,
+                                                            final SparseArray<String> appStrings) {
     try {
       SparseArray<String> localizableStrings = new SparseArray<>();
-      for(int index = 0; index <= appStrings.size(); index ++) {
+      for (int index = 0; index <= appStrings.size(); index++) {
         int key = appStrings.keyAt(index);
         String value = appStrings.valueAt(index);
         String string = strings.get(value);
-        if (string != null)
-          localizableStrings.put(key ,string);
+        if (string != null) {
+          localizableStrings.put(key, string);
+        }
       }
       return localizableStrings;
-    } catch(Exception e) {
+    } catch (Exception e) {
       return null;
     }
   }
 
 
   /**
-   * Check if there are any language updates from the server, if no new languages found only sync strings
-   * otherwise call for a full fetch for the selected language
+   * Check if there are any language updates from the server,
+   * if no new languages found only sync strings otherwise
+   * call for a full fetch for the selected language.
    *
-   * @param context
+   * @param context Application context
    */
   void checkForNewSupportedLanguages(final Context context) {
     new SupportedLanguages(context, new SupportedLanguagesChangesCallback() {
@@ -99,51 +141,54 @@ public class Language {
       }
 
       @Override
-      void onDefaultLanguageChanged(String newDefaultLanguageCode) {
+      void onDefaultLanguageChanged(final String newDefaultLanguageCode) {
         Language.this.setLanguage(newDefaultLanguageCode, context);
       }
-    }, apiToken);
+    }, localizableAPIToken);
   }
 
   /**
    * Get a localized string given a String id and the formatting parameters.
-   * If the string is loaded for the current LocalizableLanguage return that string otherwise
-   * fallback to the string from resources
+   * If the string is loaded for the current LocalizableLanguage
+   * return that string otherwise fallback to the string from resources.
    *
    * @param context Application context
    * @param resID String resource identifier
    * @param parameters String parameters
    * @return Localizable string for current language or the system string for string resource identifier
    */
-  public String getString(Context context, int resID, Object... parameters) {
-    if (strings != null && strings.get(resID) != null)
-      return String.format(strings.get(resID), parameters);
+  public String getString(final Context context, final int resID, final Object... parameters) {
+    if (applicationStrings != null && applicationStrings.get(resID) != null) {
+      return String.format(applicationStrings.get(resID), parameters);
+    }
     return context.getResources().getString(resID, parameters);
   }
 
   /**
-   * Get a localized string given a String id. If the string is loaded for the current LocalizableLanguage
+   * Get a localized string given a String id.
+   * If the string is loaded for the current LocalizableLanguage
    * return that string otherwise fallback to the string from resources.
    *
    * @param context Application context
    * @param resID String resource identifier
    * @return Localizable string for current language or the system string for string resource identifier
    */
-  public String getString(Context context, int resID) {
-    if (strings != null && strings.get(resID) != null)
-      return strings.get(resID);
+  public String getString(final Context context, final int resID) {
+    if (applicationStrings != null && applicationStrings.get(resID) != null) {
+      return applicationStrings.get(resID);
+    }
     return context.getResources().getString(resID);
   }
 
 
   /**
-   * Load current language from cache and check if the localizable language changed, if so don't load
-   * the strings and use the default project strings until a sync call comes
-   * from the checkForNewSupportedLanguages()
+   * Load current language from cache and check if the localizable language changed,
+   * if so don't load the strings and use the default project strings until a sync call comes
+   * from the checkForNewSupportedLanguages().
    *
    * @param context Application context
    */
-  void loadCachedData(Context context) {
+  void loadCachedData(final Context context) {
     AppLanguage appLanguage = loadCurrentAppLanguageFromDisk(context);
 
     if (appLanguage == null) {
@@ -151,8 +196,8 @@ public class Language {
       return;
     }
 
-    this.code = appLanguage.code;
-    this.strings = new SparseArray<>();
+    this.currentLanguageCode = appLanguage.code;
+    this.applicationStrings = new SparseArray<>();
 
     String sdkLanguage = SupportedLanguages.currentLocalizableLanguageCodeFromCache(context);
     if (sdkLanguage == null) {
@@ -174,7 +219,7 @@ public class Language {
    *
    * @param context Application context
    */
-  void syncFromDisk(Context context) {
+  void syncFromDisk(final Context context) {
     AppLanguage appLanguage = loadCurrentAppLanguageFromDisk(context);
     if (appLanguage == null) {
       LocalizableLog.error("Could not find any language on the disk");
@@ -186,29 +231,31 @@ public class Language {
 
 
   /**
-   * Load cached strings from file
+   * Load cached strings from file.
    *
    * @param context Application context
    * @return Instance of the AppLanguage loaded from disk or null
    */
-  private AppLanguage loadCurrentAppLanguageFromDisk(Context context) {
+  private AppLanguage loadCurrentAppLanguageFromDisk(final Context context) {
     return loadAppLanguageFromDisk(context);
   }
 
 
   /**
-   * Request new string updates from Server, apply the diffs to the current instance and save the
-   * file with the changes and updated timestamp
+   * Request new string updates from Server, apply the diffs
+   * to the current instance and save the
+   * file with the changes and updated timestamp.
    *
    * @param appLanguage Current selected app language
    * @param context Application context
    */
   void updateStrings(final AppLanguage appLanguage, final Context context) {
-    HttpRequest request = new HttpRequest(LocalizableOperation.UpdateLanguage(appLanguage.code, appLanguage.modifiedAt, apiToken));
+    HttpRequest request = new HttpRequest(LocalizableOperation.updateLanguage(appLanguage.code,
+        appLanguage.modifiedAt, localizableAPIToken));
     request.execute(new LocalizableAppLanguageCallback() {
 
       @Override
-      protected void onResponse(Call call, AppLanguage serverDiffs) {
+      protected void onResponse(final Call call, final AppLanguage serverDiffs) {
         if (serverDiffs.strings.isEmpty()) {
           LocalizableLog.debug("No updates from the server");
         } else {
@@ -218,12 +265,12 @@ public class Language {
           updateInstanceWithAppLanguage(appLanguage);
         }
 
-        appLanguage.modifiedAt = new Date().getTime()/1000;
+        appLanguage.modifiedAt = new Date().getTime() / MILLISECONDS_IN_SECOND;
         appLanguage.saveToDisk(context);
       }
 
       @Override
-      public void onFailure(Call call, IOException e) {
+      public void onFailure(final Call call, final IOException e) {
         LocalizableLog.error(e);
       }
     });
@@ -232,11 +279,11 @@ public class Language {
 
   @Override
   public String toString() {
-    return "Language {" +
-        "apiToken='" + apiToken + '\'' +
-        ", code='" + code + '\'' +
-        ", strings=" + strings.toString() +
-        ", appStrings=" + appStrings.toString() +
-        '}';
+    return "Language {"
+        + "apiToken='" + localizableAPIToken + '\''
+        + ", code='" + currentLanguageCode + '\''
+        + ", strings=" + localizableStrings.toString()
+        + ", appStrings=" + applicationStrings.toString()
+        + '}';
   }
 }

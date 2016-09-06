@@ -15,5 +15,7 @@ public class MainActivity extends AppCompatActivity {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_main);
     Log.e("LOCALIZABLE", Localizable.getString(R.string.greeting_message, "Bruno"));
+    Localizable.setLocale(new Locale("pt", "PT"));
+    Log.e("LOCALIZABLE", Localizable.getString(R.string.greeting_message, "Bruno"));
   }
 }

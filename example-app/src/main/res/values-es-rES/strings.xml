@@ -1,0 +1,8 @@
+<resources>
+    <string name="app_name">Localizable</string>
+    <string name="action_settings">Settings</string>
+    <string name="hello">Hello</string>
+    <string name="goodbye">Goodbye</string>
+    <string name="poop">Poop Default</string>
+    <string name="greeting_message">Hola compadres %1$s!</string>
+</resources>
