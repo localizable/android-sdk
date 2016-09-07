@@ -1,34 +1,33 @@
 package io.localizable.demo.sdk.networking.async;
 
+import okhttp3.Call;
+import okhttp3.Callback;
+import okhttp3.Response;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
 
-import okhttp3.Call;
-import okhttp3.Callback;
-import okhttp3.Response;
-
 /**
- * JSON callback is a wrapper to return the response value as JSON or return failure,
- *
+ * JSON callback is a wrapper to return the response value as JSON or return failure.
  */
 
-public abstract class JSONCallback implements Callback {
+public abstract class JsonCallback implements Callback {
   @Override
   public void onResponse(Call call, Response response) throws IOException {
     try {
-      onJSONResponse(call, new JSONObject(response.body().string()));
-    } catch (JSONException e) {
+      onJsonResponse(call, new JSONObject(response.body().string()));
+    } catch (JSONException ignored) {
       onFailure(call, null);
     }
   }
 
   /**
-   * Success response with a JSONObject
+   * Success response with a JSONObject.
    *
    * @param call The network call that was the origin of the request
    * @param json The response JSONObject
    */
-  public abstract void onJSONResponse(Call call, JSONObject json);
+  protected abstract void onJsonResponse(Call call, JSONObject json);
+
 }

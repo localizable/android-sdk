@@ -1,8 +1,8 @@
 package io.localizable.demo.sdk.networking;
 
-import java.util.HashMap;
-
 import io.localizable.demo.sdk.networking.async.HttpRequest;
+
+import java.util.HashMap;
 
 /**
  * Localizable implementation of HttpOperations,
@@ -16,12 +16,13 @@ public class LocalizableOperation extends HttpOperation {
    * @return Localizable base endpoint
    */
   @Override
-  protected final String getBaseEndpoint() {
+  /*protected final String getBaseEndpoint() {
     return "https://localizable-api.herokuapp.com/api/v1/";
-  }
-  /*protected String getBaseEndpoint() {
-    return "http://192.168.0.149:4000/api/v1/";
   }*/
+
+  protected String getBaseEndpoint() {
+    return "http://192.168.1.4:4000/api/v1/";
+  }
 
 
   /**
@@ -32,8 +33,8 @@ public class LocalizableOperation extends HttpOperation {
    * @param requestType - Operation request type GET PUT POST
    * @param apiToken - Localizable api token
    */
-  protected LocalizableOperation(final String path, final HashMap<String, String> parameters,
-                                 final HttpRequest.NetworkOperationType requestType, final String apiToken) {
+  protected LocalizableOperation(String path, HashMap<String, String> parameters,
+                                 HttpRequest.NetworkOperationType requestType, String apiToken) {
     super(path, parameters, requestType, defaultLocalizableHeadersWithToken(apiToken));
   }
 
@@ -43,7 +44,7 @@ public class LocalizableOperation extends HttpOperation {
    * @param apiToken - Current Localizable API token
    * @return Operation headers with the API token
    */
-  private static HashMap<String, String> defaultLocalizableHeadersWithToken(final String apiToken) {
+  private static HashMap<String, String> defaultLocalizableHeadersWithToken(String apiToken) {
     HashMap<String, String> headers = defaultLocalizableHeaders();
     headers.put("X-LOCALIZABLE-TOKEN", apiToken);
     return headers;
@@ -51,7 +52,7 @@ public class LocalizableOperation extends HttpOperation {
 
   /**
    * Default Localizable operation headers.
-   *
+   * <p></p>
    * Content-Type + Accept
    *
    * @return Default Localizable operation headers
@@ -63,7 +64,7 @@ public class LocalizableOperation extends HttpOperation {
     return headers;
   }
 
-// Localizable operation generators start Here
+  // Localizable operation generators start Here
 
   /**
    * Fetch the most recent language tokens for a language, since last modified.
@@ -73,11 +74,11 @@ public class LocalizableOperation extends HttpOperation {
    * @param apiToken Localizable API Token
    * @return Http operation to fetch the language token updates
    */
-  public static HttpOperation updateLanguage(final String code, final long lastModified, final String apiToken) {
+  public static HttpOperation updateLanguage(String code, long lastModified, String apiToken) {
     HashMap<String, String> parameters = new HashMap<>();
     parameters.put("modified_at", "" + lastModified);
 
-    return new LocalizableOperation("languages/"+ code, parameters,
+    return new LocalizableOperation("languages/" + code, parameters,
         HttpRequest.NetworkOperationType.GET, apiToken);
   }
 
@@ -87,7 +88,7 @@ public class LocalizableOperation extends HttpOperation {
    * @param apiToken Localizable API Token
    * @return Http Operation to fetch the Language codes
    */
-  public static HttpOperation languageCodes(final String apiToken) {
+  public static HttpOperation languageCodes(String apiToken) {
     return new LocalizableOperation("languages/platforms/android", new HashMap<String, String>(),
         HttpRequest.NetworkOperationType.GET, apiToken);
   }

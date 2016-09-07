@@ -18,7 +18,7 @@ public class FileLoader<T extends Serializable> {
   private static final String FOLDER_NAME = "localizable";
 
   /**
-   * Helper to store and load a serializable class from disk
+   * Helper to store and load a serializable class from disk.
    *
    * @param context Application context to get the app specific file DIR
    * @param name Name of the file to store/load
@@ -29,7 +29,7 @@ public class FileLoader<T extends Serializable> {
   }
 
   /**
-   * Load the file with the name
+   * Load the file with the name.
    *
    * @return An instance of the T class or null if class is not found/invalid file
    */
@@ -42,18 +42,19 @@ public class FileLoader<T extends Serializable> {
       }
       FileInputStream fileInputStream = new FileInputStream(file);
       ObjectInputStream objectInputStream = new ObjectInputStream(fileInputStream);
+      //noinspection unchecked
       T returnValue = (T) objectInputStream.readObject();
       fileInputStream.close();
       objectInputStream.close();
       return returnValue;
-    } catch (ClassNotFoundException | IOException e) {
-      e.printStackTrace();
+    } catch (ClassNotFoundException | IOException exception) {
+      exception.printStackTrace();
     }
     return null;
   }
 
   /**
-   * Store the file in the Localizable Folder
+   * Store the file in the Localizable Folder.
    *
    * @param instance The object to store
    */
@@ -64,13 +65,13 @@ public class FileLoader<T extends Serializable> {
       ObjectOutputStream os = new ObjectOutputStream(fileStream);
       os.writeObject(instance);
       os.close();
-    } catch (Exception e) {
-      e.printStackTrace();
+    } catch (Exception exception) {
+      exception.printStackTrace();
     }
   }
 
   /**
-   * Delete the file in the Localizable Folder
+   * Delete the file in the Localizable Folder.
    *
    */
   public boolean delete() {
@@ -79,8 +80,8 @@ public class FileLoader<T extends Serializable> {
       if (file.exists()) {
         return file.delete();
       }
-    } catch (Exception e) {
-      e.printStackTrace();
+    } catch (Exception exception) {
+      exception.printStackTrace();
     }
     return false;
   }

@@ -1,45 +1,84 @@
 package io.localizable.demo.sdk.utils;
 
+@SuppressWarnings("unused")
 public class LocalizableLog {
 
   private static String LocalizablePrefix = "Localizable ~~> ";
+
   public static LocalizableLogLevel logLevel = LocalizableLogLevel.DEBUG;
 
-  public static void error(String error) {
-    System.out.println(LocalizablePrefix + "Error " + error);
+
+  /**
+   * Log sdk Error message.
+   *
+   * @param message message to log
+   */
+  public static void error(String message) {
+    System.out.println(LocalizablePrefix + "Error " + message);
   }
 
-  public static void error(Exception error) {
-    System.out.println(LocalizablePrefix + "Error " + error.getMessage());
+
+  /**
+   * Log sdk Error exception.
+   *
+   * @param exception exception to log
+   */
+  public static void error(Exception exception) {
+    System.out.println(LocalizablePrefix + "Error " + exception.getMessage());
   }
 
-  public static void warning(String error) {
+
+  /**
+   * Log sdk Warning message.
+   *
+   * @param message message to log
+   */
+  public static void warning(String message) {
     if (logLevel.value > LocalizableLogLevel.WARNING.value) {
       return;
     }
-    System.out.println(LocalizablePrefix + "Warning " + error);
+    System.out.println(LocalizablePrefix + "Warning " + message);
   }
 
-  public static void warning(Exception error) {
+
+  /**
+   * Log sdk warning exception.
+   *
+   * @param exception exception to log
+   */
+  public static void warning(Exception exception) {
     if (logLevel.value > LocalizableLogLevel.WARNING.value) {
       return;
     }
-    System.out.println(LocalizablePrefix + "Warning " + error.getMessage());
+    System.out.println(LocalizablePrefix + "Warning " + exception.getMessage());
   }
 
-  public static void debug(String error) {
+
+  /**
+   * Log sdk Debug message.
+   *
+   * @param message message to log
+   */
+  public static void debug(String message) {
     if (logLevel.value > LocalizableLogLevel.DEBUG.value) {
       return;
     }
-    System.out.println(LocalizablePrefix + "Debug " + error);
+    System.out.println(LocalizablePrefix + "Debug " + message);
   }
 
-  public static void debug(Exception error) {
+
+  /**
+   * Log sdk Debug exception.
+   *
+   * @param exception exception to log
+   */
+  public static void debug(Exception exception) {
     if (logLevel.value > LocalizableLogLevel.DEBUG.value) {
       return;
     }
-    System.out.println(LocalizablePrefix + "Debug " + error.getMessage());
+    System.out.println(LocalizablePrefix + "Debug " + exception.getMessage());
   }
+
 
   public enum LocalizableLogLevel {
     DEBUG(0), WARNING(1), ERROR(2);
@@ -47,6 +86,7 @@ public class LocalizableLog {
     LocalizableLogLevel(int value) {
       this.value = value;
     }
+
     public int value;
   }
 }

@@ -4,26 +4,17 @@ import android.content.Context;
 import android.content.SharedPreferences;
 
 public class LocalizableSharedPreferences {
-  private static final String DEFAULT_LOCALIZABLE_LANGUAGE_CODE = "io.localizable.default.language_code";
-  private static final String USER_LOCALIZABLE_LANGUAGE_CODE = "io.localizable.default.language_code";
 
-  public static void setDefaultLocalizableLanguage(String currentLocalizableLanguageCode, Context context) {
-    Helper.setString(DEFAULT_LOCALIZABLE_LANGUAGE_CODE, currentLocalizableLanguageCode, context);
+  private static final String DEFAULT_LANGUAGE_CODE = "io.localizable.default.language_code";
+
+  public static void setDefaultLocalizableLanguage(String currentLocalizableLanguageCode,
+                                                   Context context) {
+    Helper.setString(DEFAULT_LANGUAGE_CODE, currentLocalizableLanguageCode, context);
   }
 
   public static String getDefaultLocalizableLanguage(Context context) {
-    return Helper.getString(DEFAULT_LOCALIZABLE_LANGUAGE_CODE, context);
+    return Helper.getString(DEFAULT_LANGUAGE_CODE, context);
   }
-
-
-  public static void setUserLocalizableLanguage(String currentLocalizableLanguageCode, Context context) {
-    Helper.setString(USER_LOCALIZABLE_LANGUAGE_CODE, currentLocalizableLanguageCode, context);
-  }
-
-  public static String getUserLocalizableLanguage(Context context) {
-    return Helper.getString(USER_LOCALIZABLE_LANGUAGE_CODE, context);
-  }
-
 
   private static class Helper {
     // Localizable SharedPreferences key
@@ -42,8 +33,8 @@ public class LocalizableSharedPreferences {
             context.getSharedPreferences(SHARED_PREFERENCES_STRING_KEY,
                 Context.MODE_PRIVATE);
         return sharedPreferences.getString(key, null);
-      } catch (NullPointerException e) {
-        LocalizableLog.error(e);
+      } catch (NullPointerException exception) {
+        LocalizableLog.error(exception);
         return null;
       }
     }
@@ -62,8 +53,8 @@ public class LocalizableSharedPreferences {
             context.getSharedPreferences(SHARED_PREFERENCES_STRING_KEY,
                 Context.MODE_PRIVATE);
         return sharedPreferences.edit().putString(key, newValue).commit();
-      } catch (NullPointerException e) {
-        LocalizableLog.error(e);
+      } catch (NullPointerException exception) {
+        LocalizableLog.error(exception);
         return false;
       }
     }

@@ -1,20 +1,21 @@
 package io.localizable.demo.sdk.model;
 
+import static io.localizable.demo.sdk.model.AppLanguage.loadAppLanguageFromDisk;
+
 import android.content.Context;
 import android.util.SparseArray;
-
-import java.io.IOException;
-import java.util.Date;
-import java.util.HashMap;
 
 import io.localizable.demo.sdk.networking.LocalizableOperation;
 import io.localizable.demo.sdk.networking.async.HttpRequest;
 import io.localizable.demo.sdk.networking.callback.LocalizableAppLanguageCallback;
 import io.localizable.demo.sdk.utils.LocalizableLog;
+
+import io.localizable.demo.sdk.utils.SupportedLanguagesChangesCallback;
 import okhttp3.Call;
 
-import static io.localizable.demo.sdk.model.AppLanguage.loadAppLanguageFromDisk;
-
+import java.io.IOException;
+import java.util.Date;
+import java.util.HashMap;
 
 /**
  * Control the localized tokens for the current defined localizable language,
@@ -32,7 +33,7 @@ public final class Language {
   /**
    * Localizable API token.
    */
-  private String localizableAPIToken;
+  private String localizableApiToken;
 
   /**
    * Current locale code, example: pt-PT.
@@ -60,12 +61,13 @@ public final class Language {
    * @param context Application context
    * @param apiToken Localizable API token
    */
-  public Language(final SparseArray<String> appStrings, final Context context, final String apiToken) {
+  public Language(SparseArray<String> appStrings, Context context, String apiToken) {
     applicationStrings = appStrings;
-    localizableAPIToken = apiToken;
+    localizableApiToken = apiToken;
     this.loadCachedData(context);
     this.checkForNewSupportedLanguages(context);
   }
+
 
   /**
    * Update language code, if the localizable language is the same
@@ -76,7 +78,7 @@ public final class Language {
    * @param languageCode New languageCode
    * @param context Application context
    */
-  void setLanguage(final String languageCode, final Context context) {
+  void setLanguage(String languageCode, Context context) {
     if (languageCode.equalsIgnoreCase(this.currentLanguageCode)) {
       this.syncFromDisk(context);
       return;
@@ -93,9 +95,9 @@ public final class Language {
    *
    * @param appLanguage AppLanguage to override current instance, code and strings values
    */
-  void updateInstanceWithAppLanguage(final AppLanguage appLanguage) {
-    this.currentLanguageCode = appLanguage.code;
-    this.localizableStrings = sparseArrayFromHashMap(appLanguage.strings, applicationStrings);
+  void updateInstanceWithAppLanguage(AppLanguage appLanguage) {
+    this.currentLanguageCode = appLanguage.getCode();
+    this.localizableStrings = sparseArrayFromHashMap(appLanguage.getStrings(), applicationStrings);
   }
 
 
@@ -120,7 +122,7 @@ public final class Language {
         }
       }
       return localizableStrings;
-    } catch (Exception e) {
+    } catch (Exception ignored) {
       return null;
     }
   }
@@ -136,16 +138,17 @@ public final class Language {
   void checkForNewSupportedLanguages(final Context context) {
     new SupportedLanguages(context, new SupportedLanguagesChangesCallback() {
       @Override
-      void onNoChangesDetected() {
+      public void onNoChangesDetected() {
         Language.this.syncFromDisk(context);
       }
 
       @Override
-      void onDefaultLanguageChanged(final String newDefaultLanguageCode) {
+      public void onDefaultLanguageChanged(final String newDefaultLanguageCode) {
         Language.this.setLanguage(newDefaultLanguageCode, context);
       }
-    }, localizableAPIToken);
+    }, localizableApiToken);
   }
+
 
   /**
    * Get a localized string given a String id and the formatting parameters.
@@ -153,16 +156,17 @@ public final class Language {
    * return that string otherwise fallback to the string from resources.
    *
    * @param context Application context
-   * @param resID String resource identifier
+   * @param resId String resource identifier
    * @param parameters String parameters
-   * @return Localizable string for current language or the system string for string resource identifier
+   * @return Localizable string for current language or the default resource in values
    */
-  public String getString(final Context context, final int resID, final Object... parameters) {
-    if (applicationStrings != null && applicationStrings.get(resID) != null) {
-      return String.format(applicationStrings.get(resID), parameters);
+  public String getString(final Context context, final int resId, final Object... parameters) {
+    if (applicationStrings != null && applicationStrings.get(resId) != null) {
+      return String.format(applicationStrings.get(resId), parameters);
     }
-    return context.getResources().getString(resID, parameters);
+    return context.getResources().getString(resId, parameters);
   }
+
 
   /**
    * Get a localized string given a String id.
@@ -170,14 +174,14 @@ public final class Language {
    * return that string otherwise fallback to the string from resources.
    *
    * @param context Application context
-   * @param resID String resource identifier
-   * @return Localizable string for current language or the system string for string resource identifier
+   * @param resId String resource identifier
+   * @return Localizable string for current language or the default resource in values
    */
-  public String getString(final Context context, final int resID) {
-    if (applicationStrings != null && applicationStrings.get(resID) != null) {
-      return applicationStrings.get(resID);
+  public String getString(final Context context, final int resId) {
+    if (applicationStrings != null && applicationStrings.get(resId) != null) {
+      return applicationStrings.get(resId);
     }
-    return context.getResources().getString(resID);
+    return context.getResources().getString(resId);
   }
 
 
@@ -196,7 +200,7 @@ public final class Language {
       return;
     }
 
-    this.currentLanguageCode = appLanguage.code;
+    this.currentLanguageCode = appLanguage.getCode();
     this.applicationStrings = new SparseArray<>();
 
     String sdkLanguage = SupportedLanguages.currentLocalizableLanguageCodeFromCache(context);
@@ -207,8 +211,8 @@ public final class Language {
 
     // Only set languages if the code is the same otherwise it will need an update or fetch
     // That is controlled by the checkForNewSupportedLanguages() method
-    if (sdkLanguage.equalsIgnoreCase(appLanguage.code)) {
-        updateInstanceWithAppLanguage(appLanguage);
+    if (sdkLanguage.equalsIgnoreCase(appLanguage.getCode())) {
+      updateInstanceWithAppLanguage(appLanguage);
     }
   }
 
@@ -250,28 +254,28 @@ public final class Language {
    * @param context Application context
    */
   void updateStrings(final AppLanguage appLanguage, final Context context) {
-    HttpRequest request = new HttpRequest(LocalizableOperation.updateLanguage(appLanguage.code,
-        appLanguage.modifiedAt, localizableAPIToken));
+    HttpRequest request = new HttpRequest(LocalizableOperation.updateLanguage(appLanguage.getCode(),
+        appLanguage.getModifiedAt(), localizableApiToken));
     request.execute(new LocalizableAppLanguageCallback() {
 
       @Override
       protected void onResponse(final Call call, final AppLanguage serverDiffs) {
-        if (serverDiffs.strings.isEmpty()) {
+        if (serverDiffs.getStrings().isEmpty()) {
           LocalizableLog.debug("No updates from the server");
         } else {
-          for (String key : serverDiffs.strings.keySet()) {
-            appLanguage.strings.put(key, serverDiffs.strings.get(key));
+          for (String key : serverDiffs.getStrings().keySet()) {
+            appLanguage.getStrings().put(key, serverDiffs.getStrings().get(key));
           }
           updateInstanceWithAppLanguage(appLanguage);
         }
 
-        appLanguage.modifiedAt = new Date().getTime() / MILLISECONDS_IN_SECOND;
+        appLanguage.setModifiedAt(new Date().getTime() / MILLISECONDS_IN_SECOND);
         appLanguage.saveToDisk(context);
       }
 
       @Override
-      public void onFailure(final Call call, final IOException e) {
-        LocalizableLog.error(e);
+      public void onFailure(final Call call, final IOException exception) {
+        LocalizableLog.error(exception);
       }
     });
   }
@@ -280,7 +284,7 @@ public final class Language {
   @Override
   public String toString() {
     return "Language {"
-        + "apiToken='" + localizableAPIToken + '\''
+        + "apiToken='" + localizableApiToken + '\''
         + ", code='" + currentLanguageCode + '\''
         + ", strings=" + localizableStrings.toString()
         + ", appStrings=" + applicationStrings.toString()

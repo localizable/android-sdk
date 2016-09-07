@@ -2,12 +2,12 @@ package io.localizable.demo.sdk.model;
 
 import android.content.Context;
 
+import io.localizable.demo.sdk.utils.FileLoader;
+import io.localizable.demo.sdk.utils.LocalizableLog;
+
 import java.io.Serializable;
 import java.util.Date;
 import java.util.HashMap;
-
-import io.localizable.demo.sdk.utils.FileLoader;
-import io.localizable.demo.sdk.utils.LocalizableLog;
 
 /**
  * Direct representation of a Localizable language.
@@ -41,7 +41,8 @@ public class AppLanguage implements Serializable {
    * @param languageStrings Language strings
    * @param lastModifiedAt Last update time
    */
-  public AppLanguage(final String languageCode, final HashMap<String, String> languageStrings, final Long lastModifiedAt) {
+  public AppLanguage(String languageCode, HashMap<String, String> languageStrings,
+                     Long lastModifiedAt) {
     code = languageCode;
     strings = languageStrings;
     modifiedAt = lastModifiedAt;
@@ -52,8 +53,24 @@ public class AppLanguage implements Serializable {
    * @param languageCode Localizable language code
    * @param languageStrings Language strings
    */
-  public AppLanguage(final String languageCode, final HashMap<String, String> languageStrings) {
+  public AppLanguage(String languageCode, HashMap<String, String> languageStrings) {
     this(languageCode, languageStrings, 0L);
+  }
+
+  public String getCode() {
+    return code;
+  }
+
+  public HashMap<String, String> getStrings() {
+    return strings;
+  }
+
+  public void setModifiedAt(long modifiedAt) {
+    this.modifiedAt = modifiedAt;
+  }
+
+  public long getModifiedAt() {
+    return modifiedAt;
   }
 
   /**
@@ -61,7 +78,7 @@ public class AppLanguage implements Serializable {
    *
    * @param context Application context
    */
-  public final void saveToDisk(final Context context) {
+  public final void saveToDisk(Context context) {
     LocalizableLog.debug("Saving language to File: " + toString());
     new FileLoader<AppLanguage>(context, LOCALIZABLE_LANGUAGE_FILE_NAME).store(this);
   }
@@ -71,7 +88,7 @@ public class AppLanguage implements Serializable {
    *
    * @param updates New language updates
    */
-  public final void update(final AppLanguage updates) {
+  public final void update(AppLanguage updates) {
     if (updates == null) {
       LocalizableLog.error("Trying to update Language with invalid object");
       return;
@@ -98,7 +115,7 @@ public class AppLanguage implements Serializable {
    * @param context Application context.
    * @return Localizable AppLanguage stored in the local file or null if the file is not found
    */
-  public static AppLanguage loadAppLanguageFromDisk(final Context context) {
+  public static AppLanguage loadAppLanguageFromDisk(Context context) {
     return new FileLoader<AppLanguage>(context, LOCALIZABLE_LANGUAGE_FILE_NAME).loadFile();
   }
 }

@@ -2,12 +2,12 @@ package io.localizable.demo.sdk.networking.client;
 
 import android.os.AsyncTask;
 
-import java.io.IOException;
-
 import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.Request;
 import okhttp3.Response;
+
+import java.io.IOException;
 
 /**
  * Call Used by localizable Mock client to return sample JSONs instead of the Network requests.
@@ -94,7 +94,7 @@ class LocalizableMockCall implements Call {
       protected Response doInBackground(final Void... voids) {
         try {
           return LocalizableMockCall.this.execute();
-        } catch (IOException e) {
+        } catch (IOException ignored) {
           return null;
         }
       }
@@ -109,7 +109,7 @@ class LocalizableMockCall implements Call {
         if (response != null) {
           try {
             responseCallback.onResponse(LocalizableMockCall.this, response);
-          } catch (IOException e) {
+          } catch (IOException ignored) {
             responseCallback.onFailure(LocalizableMockCall.this, null);
           }
         } else {

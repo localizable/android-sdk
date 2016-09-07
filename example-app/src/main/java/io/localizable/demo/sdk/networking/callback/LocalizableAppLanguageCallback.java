@@ -1,26 +1,29 @@
 package io.localizable.demo.sdk.networking.callback;
 
+import io.localizable.demo.sdk.model.AppLanguage;
+import io.localizable.demo.sdk.networking.async.JsonCallback;
+import io.localizable.demo.sdk.utils.LocalizableLog;
+
+import okhttp3.Call;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.HashMap;
 import java.util.Iterator;
 
-import io.localizable.demo.sdk.model.AppLanguage;
-import io.localizable.demo.sdk.networking.async.JSONCallback;
-import io.localizable.demo.sdk.utils.LocalizableLog;
-import okhttp3.Call;
 
-public abstract class LocalizableAppLanguageCallback extends JSONCallback {
+public abstract class LocalizableAppLanguageCallback extends JsonCallback {
 
   protected abstract void onResponse(Call call, AppLanguage response);
 
   /**
+   * Parses the JSONObject to AppLanguage and if it fails return null.
    *
    * @param json JSON file to parse to init class
    * @return AppLanguage file or null if JSON is invalid
    */
-  private AppLanguage fromJSON(JSONObject json) {
+  private AppLanguage fromJson(JSONObject json) {
     if (json == null) {
       return null;
     }
@@ -35,19 +38,19 @@ public abstract class LocalizableAppLanguageCallback extends JSONCallback {
         languages.put(key, tokens.getString(key));
       }
 
-      LocalizableLog.debug("Recieved updates: " +
-          new AppLanguage(code, languages, modifiedAt).toString());
+      LocalizableLog.debug("Received updates: "
+          + new AppLanguage(code, languages, modifiedAt).toString());
 
       return new AppLanguage(code, languages, modifiedAt);
-    } catch (JSONException e) {
-      LocalizableLog.error(e);
+    } catch (JSONException exception) {
+      LocalizableLog.error(exception);
     }
     return null;
   }
 
   @Override
-  public void onJSONResponse(Call call, JSONObject json) {
-    AppLanguage parsedResponse = fromJSON(json);
+  public void onJsonResponse(Call call, JSONObject json) {
+    AppLanguage parsedResponse = fromJson(json);
     if (parsedResponse != null) {
       onResponse(call, parsedResponse);
     } else {

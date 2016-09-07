@@ -6,37 +6,38 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.HashMap;
 
+import io.localizable.demo.sdk.Localizable;
 import io.localizable.demo.sdk.networking.async.HttpRequest;
 import io.localizable.demo.sdk.utils.LocalizableLog;
 
 /**
- * Base HttpOperation
- *
+ * Base HttpOperation.
+ * <p></p>
  * Contains all components of a Http request
- *
+ * <p></p>
  * Headers - Custom headers and customizable user-agent
- *
+ * <p></p>
  * RequestType - Only GET, PUT or POST supported for now
- *
+ * <p></p>
  * Parameters - Automatic add parameters to URL if is a GET or send them as Body if the request is
  * a POST or PUT
- *
+ * <p></p>
  * Path - path to append to the base endpoint
- *
  */
-abstract public class HttpOperation {
+
+public abstract class HttpOperation {
 
 
   /**
-   * Endpoint to append the path and parameters
+   * Endpoint to append the path and parameters.
    *
    * @return The base endpoint to the request
    */
-  abstract protected String getBaseEndpoint();
+  protected abstract String getBaseEndpoint();
 
 
   /**
-   * User agent to the Request
+   * User agent to the Request.
    *
    * @return The user agent or null
    */
@@ -51,8 +52,9 @@ abstract public class HttpOperation {
   private HttpRequest.NetworkOperationType requestType;
   private HashMap<String, String> headers;
 
+
   /**
-   * Constructs the operation without headers
+   * Constructs the operation without headers.
    *
    * @param path Path to the request
    * @param parameters Request parameters
@@ -63,8 +65,9 @@ abstract public class HttpOperation {
     this(path, parameters, requestType, null);
   }
 
+
   /**
-   * Constructs the operation
+   * Constructs the operation.
    *
    * @param path Path to the request
    * @param parameters Request parameters
@@ -72,69 +75,79 @@ abstract public class HttpOperation {
    * @param headers Headers to add to the request - User-Agent not included
    */
   protected HttpOperation(String path, HashMap<String, String> parameters,
-                          HttpRequest.NetworkOperationType requestType, HashMap<String, String> headers) {
+                          HttpRequest.NetworkOperationType requestType,
+                          HashMap<String, String> headers) {
     this.path = path;
     this.parameters = parameters;
     this.requestType = requestType;
 
     this.headers = new HashMap<>();
-    if (getUserAgent() != null)
+    if (getUserAgent() != null) {
       this.headers.put("UserAgent", getUserAgent());
+    }
 
     if (headers != null) {
       this.headers.putAll(headers);
     }
   }
 
+
   /**
-   * Complete url to the operation
+   * Complete url to the operation.
    *
    * @return Complete operation URL or null if the generated URL is invalid
    */
-  public URL getURL() {
+  public URL getUrl() {
     try {
-      StringBuilder completeURLBuilder = new StringBuilder();
-      completeURLBuilder.append(getBaseEndpoint());
-      completeURLBuilder.append(path);
+      StringBuilder completeUrlBuilder = new StringBuilder();
+      completeUrlBuilder.append(getBaseEndpoint());
+      completeUrlBuilder.append(path);
       if (requestType == HttpRequest.NetworkOperationType.GET && parameters != null) {
         boolean first = true;
         for (String key : parameters.keySet()) {
           if (first) {
             first = false;
-            completeURLBuilder.append("?");
+            completeUrlBuilder.append("?");
           } else {
-            completeURLBuilder.append("&");
+            completeUrlBuilder.append("&");
           }
-          completeURLBuilder.append(key).append("=").append(parameters.get(key));
+          completeUrlBuilder.append(key).append("=").append(parameters.get(key));
         }
       }
-      return new URL(completeURLBuilder.toString());
-    } catch (MalformedURLException e) {
+      return new URL(completeUrlBuilder.toString());
+    } catch (MalformedURLException exception) {
+      LocalizableLog.error(exception);
       return null;
     }
   }
 
+
   /**
-   * Operation parameters as JSON String
+   * Operation parameters as JSON String.
    *
    * @return Operation parameters as JSONString or null if no parameters found
    */
   public String getParameters() {
-    if (parameters == null)
+    if (parameters == null) {
       return null;
+    }
     return new JSONObject(parameters).toString();
   }
 
+
   /**
-   *  Network request type
+   *  Network request type.
+   *
    * @return GET PUT POST
    */
   public HttpRequest.NetworkOperationType getRequestType() {
     return requestType;
   }
 
+
   /**
-   * Operation headers
+   * Operation headers.
+   *
    * @return returns the operation headers including defined user agent
    */
   public HashMap<String, String> getHeaders() {
@@ -142,7 +155,7 @@ abstract public class HttpOperation {
   }
 
   /**
-   * String representation of the Operation - currently showing request as a Curl command
+   * String representation of the Operation - currently showing request as a Curl command.
    *
    * @return String representation of the Request
    */
@@ -151,8 +164,9 @@ abstract public class HttpOperation {
     return curlRepresentation();
   }
 
+
   /**
-   * Curl representation of the Operation
+   * Curl representation of the Operation.
    *
    * @return the Curl command to run the request
    */
@@ -162,8 +176,10 @@ abstract public class HttpOperation {
     switch (getRequestType()) {
       case POST:
         builder.append(" -X POST");
+        break;
       case PUT:
         builder.append(" -X PUT");
+        break;
       default:
         break;
     }
@@ -178,7 +194,7 @@ abstract public class HttpOperation {
     if (getParameters() != null && getRequestType() != HttpRequest.NetworkOperationType.GET) {
       builder.append(" -d ").append(getParameters());
     }
-    builder.append(" ").append(getURL().toString());
+    builder.append(" ").append(getUrl().toString());
     return builder.toString();
   }
 }

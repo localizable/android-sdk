@@ -1,12 +1,11 @@
 package io.localizable.demo.sdk.networking.async;
 
-import java.util.concurrent.TimeUnit;
-
-import javax.annotation.Nonnull;
-
 import io.localizable.demo.sdk.networking.client.LocalizableMockClient;
 import okhttp3.OkHttpClient;
 
+import java.util.concurrent.TimeUnit;
+
+import javax.annotation.Nonnull;
 
 /**
  * Network requests client generator.
@@ -18,10 +17,12 @@ public class Network {
    */
   private static OkHttpClient client;
 
+
   /**
    * Network requests timeout in seconds.
    */
   private static final int TASK_TIMEOUT = 15; // seconds
+
 
   /**
    * Get the current OKHttpClient.
@@ -31,6 +32,7 @@ public class Network {
   public static OkHttpClient getClient() {
     return client;
   }
+
 
   /**
    * Sets up the environment as Network.
@@ -45,15 +47,17 @@ public class Network {
    *
    * @param buildType Selected Environment
    */
-  public static void setup(@Nonnull final NetworkType buildType) {
+  public static void setup(@Nonnull NetworkType buildType) {
     switch (buildType) {
       case MOCK:
         Network.client = new LocalizableMockClient();
         break;
       case NETWORK:
-      Network.client = new OkHttpClient.Builder()
-          .connectTimeout(TASK_TIMEOUT, TimeUnit.SECONDS)
-          .build();
+        Network.client = new OkHttpClient.Builder()
+            .connectTimeout(TASK_TIMEOUT, TimeUnit.SECONDS)
+            .build();
+        break;
+      default:
         break;
     }
   }

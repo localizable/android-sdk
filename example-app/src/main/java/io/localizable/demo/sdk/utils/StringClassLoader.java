@@ -3,9 +3,9 @@ package io.localizable.demo.sdk.utils;
 import android.content.Context;
 import android.util.SparseArray;
 
-import java.lang.reflect.Field;
-
 import io.localizable.demo.sdk.exceptions.NoStringsClassFoundException;
+
+import java.lang.reflect.Field;
 
 public class StringClassLoader {
 
@@ -15,14 +15,15 @@ public class StringClassLoader {
    * @param context application Context
    * @return A Sparse array where the keys contain the Int value to fetch the string resource.
    */
-  public static SparseArray<String> loadStringsFromContext(Context context) throws NoStringsClassFoundException {
+  public static SparseArray<String> loadStringsFromContext(Context context)
+      throws NoStringsClassFoundException {
     return loadStringsFromClass(getStringsClass(context));
   }
 
   /**
    * Retrieves all the String Int values at Runtime.
    *
-   * @param stringsClazz R.String classs
+   * @param stringsClazz R.String class
    * @return A Sparse array where the keys contain the Int value to fetch the string resource.
    */
   public static SparseArray<String> loadStringsFromClass(Class stringsClazz) {
@@ -31,7 +32,9 @@ public class StringClassLoader {
     for (Field field : fields) {
       try {
         stringTokens.append(field.getInt(stringsClazz), field.getName());
-      } catch (Exception e) { }
+      } catch (Exception exception) {
+        LocalizableLog.warning(exception);
+      }
     }
     return stringTokens;
   }
@@ -45,16 +48,16 @@ public class StringClassLoader {
    * @return A Class object or null.
    */
   private static Class<?> getStringsClass(Context context) throws NoStringsClassFoundException {
-    Class<?> klass = getBuildRStringClassFromPackage(context.getPackageName(), true);
-    if (klass == null) {
-      klass = getBuildRStringClassFromPackage(context.getClass().getPackage().getName(), true);
+    Class<?> clazz = getBuildRStringClassFromPackage(context.getPackageName(), true);
+    if (clazz == null) {
+      clazz = getBuildRStringClassFromPackage(context.getClass().getPackage().getName(), true);
     }
 
-    if (klass == null) {
+    if (clazz == null) {
       throw new NoStringsClassFoundException();
     }
 
-    return klass;
+    return clazz;
   }
 
   /**
@@ -69,7 +72,7 @@ public class StringClassLoader {
   private static Class<?> getBuildRStringClassFromPackage(String packageName, boolean traverse) {
     try {
       return Class.forName(packageName + ".R$string");
-    } catch (ClassNotFoundException e) {
+    } catch (ClassNotFoundException ignored) {
       if (traverse) {
         int indexOfLastDot = packageName.lastIndexOf('.');
         if (indexOfLastDot != -1) {

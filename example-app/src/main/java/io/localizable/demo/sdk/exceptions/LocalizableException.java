@@ -5,12 +5,12 @@ package io.localizable.demo.sdk.exceptions;
  */
 public class LocalizableException extends RuntimeException {
 
-    /**
-     * Default constructor.
-     *
-     * @param message Message to be shown
-     */
-    protected LocalizableException(final String message) {
-        super(message);
-    }
+  /**
+   * Default constructor.
+   *
+   * @param message Message to be shown
+   */
+  protected LocalizableException(final String message) {
+    super(message);
+  }
 }

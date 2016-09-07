@@ -6,28 +6,22 @@ import android.content.res.Resources;
 import android.os.Build;
 import android.util.SparseArray;
 
+import io.localizable.demo.sdk.model.Language;
+import io.localizable.demo.sdk.model.UserDefinedLocale;
+import io.localizable.demo.sdk.networking.async.Network;
+import io.localizable.demo.sdk.utils.ManifestUtils;
+import io.localizable.demo.sdk.utils.StringClassLoader;
+
 import java.util.Locale;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-import io.localizable.demo.sdk.model.Language;
-import io.localizable.demo.sdk.model.UserDefinedLocale;
-import io.localizable.demo.sdk.networking.async.Network;
-import io.localizable.demo.sdk.utils.StringClassLoader;
-import io.localizable.demo.sdk.utils.ManifestUtils;
-
 /**
  * Localizable singleton class.
  */
+@SuppressWarnings("unused")
 public final class Localizable {
-
-  /**
-   * Private constructor no op.
-   */
-  private Localizable() {
-    //No-op
-  }
 
   public static final class Constants {
     /**
@@ -61,9 +55,9 @@ public final class Localizable {
    *
    * @param context Application context
    */
-  public static void setup(@Nonnull final Context context) {
+  public static void setup(@Nonnull Context context) {
     Network.setup();
-    Localizable.apiToken = ManifestUtils.getAPITokenFromMetadata(context);
+    Localizable.apiToken = ManifestUtils.getApiTokenFromMetadata(context);
     Localizable.applicationContext = context;
     Localizable.appStrings = StringClassLoader.loadStringsFromContext(context);
     Localizable.language = new Language(Localizable.appStrings, context, apiToken);
@@ -73,23 +67,23 @@ public final class Localizable {
   /**
    * Get localized resource with identifier.
    *
-   * @param stringID String resource identifier
+   * @param stringId String resource identifier
    * @return Localized String from localizable backend or app resources
    */
-  public static String getString(final int stringID) {
-    return language.getString(applicationContext, stringID);
+  public static String getString(int stringId) {
+    return language.getString(applicationContext, stringId);
   }
 
 
   /**
    * Get localized resource with identifier and parameters.
    *
-   * @param stringID String resource identifier
+   * @param stringId String resource identifier
    * @param parameters String parameters
    * @return Localized String from localizable backend or app resources
    */
-  public static String getString(final int stringID, final Object... parameters) {
-    return language.getString(applicationContext, stringID, parameters);
+  public static String getString(int stringId, Object... parameters) {
+    return language.getString(applicationContext, stringId, parameters);
   }
 
 
@@ -98,7 +92,7 @@ public final class Localizable {
    *
    * @param locale Locale to set as top priority or null to reset to default locale
    */
-  public static void setLocale(@Nullable final Locale locale) {
+  public static void setLocale(@Nullable Locale locale) {
     setLocale(locale, true);
   }
 
@@ -110,9 +104,11 @@ public final class Localizable {
    * @param locale Locale to set as top priority or null to reset to default locale
    * @param shouldSetTheApplicationContext true if the Application context should change too
    */
-  public static void setLocale(@Nullable final Locale locale, final boolean shouldSetTheApplicationContext) {
+  public static void setLocale(@Nullable Locale locale, boolean shouldSetTheApplicationContext) {
     UserDefinedLocale.setUserLocale(applicationContext, locale);
-    setApplicationContextLocale(applicationContext, locale);
+    if (shouldSetTheApplicationContext) {
+      setApplicationContextLocale(applicationContext, locale);
+    }
     Localizable.language = new Language(Localizable.appStrings, applicationContext, apiToken);
   }
 
@@ -124,7 +120,7 @@ public final class Localizable {
    * @param context Application context
    * @param locale Locale to set
    */
-  static void setApplicationContextLocale(@Nonnull final Context context, @Nullable final Locale locale) {
+  static void setApplicationContextLocale(@Nonnull Context context, @Nullable Locale locale) {
     Resources resources = context.getResources();
     Configuration configuration = resources.getConfiguration();
     Locale defaultDeviceLocale = getDeviceDefaultLocale(context);
@@ -151,6 +147,7 @@ public final class Localizable {
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
       return context.getResources().getConfiguration().getLocales().get(0);
     } else {
+      //noinspection deprecation
       return context.getResources().getConfiguration().locale;
     }
   }

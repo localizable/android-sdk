@@ -1,8 +1,5 @@
 package io.localizable.demo.sdk.networking.async;
 
-import java.io.Serializable;
-import java.util.HashMap;
-
 import io.localizable.demo.sdk.networking.HttpOperation;
 import io.localizable.demo.sdk.utils.LocalizableLog;
 import okhttp3.Callback;
@@ -10,6 +7,10 @@ import okhttp3.MediaType;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.RequestBody;
+
+import java.io.Serializable;
+import java.util.HashMap;
+
 
 /**
  * HttpRequest is a savable model around OkHttpRequests.
@@ -24,14 +25,29 @@ public class HttpRequest implements Serializable {
   HttpOperation operation;
   OkHttpClient networkClient;
 
+
   /**
-   * Creates a request with an HttpOperation
+   * Get the current network client if no exists create one.
    *
-   * @param operation     The operation to execute
+   * @return shared instance of OkHttpClient
+   */
+  public OkHttpClient getNetworkClient() {
+    if (networkClient == null) {
+      networkClient = Network.getClient();
+    }
+    return networkClient;
+  }
+
+
+  /**
+   * Creates a request with an HttpOperation.
+   *
+   * @param operation The operation to execute
    */
   public HttpRequest(HttpOperation operation) {
     this.operation = operation;
   }
+
 
   /**
    * Executes the HTTPRequest with the operation and returns the result thought the callback.
@@ -42,13 +58,13 @@ public class HttpRequest implements Serializable {
     LocalizableLog.debug("Executing request: " + operation.toString());
     switch (operation.getRequestType()) {
       case GET:
-        performGET(httpCallback);
+        performGet(httpCallback);
         break;
       case POST:
-        performPOST(httpCallback);
+        performPost(httpCallback);
         break;
       case PUT:
-        performPUT(httpCallback);
+        performPut(httpCallback);
         break;
       default:
         break;
@@ -56,11 +72,6 @@ public class HttpRequest implements Serializable {
 
   }
 
-  public OkHttpClient getNetworkClient() {
-    if (networkClient == null)
-      networkClient = Network.getClient();
-    return networkClient;
-  }
 
   /**
    * Adds the Operation parameters to the request builder.
@@ -74,43 +85,47 @@ public class HttpRequest implements Serializable {
     }
   }
 
+
   /**
    * Performs an HttpGet to the specified url, will handle the response with the callback.
    *
    * @param httpCallback The Callback object.
    */
-  void performGET(Callback httpCallback) {
+  void performGet(Callback httpCallback) {
     Request.Builder builder = new Request.Builder();
-    builder.url(operation.getURL());
+    builder.url(operation.getUrl());
     applyHeaders(builder);
     this.getNetworkClient().newCall(builder.build()).enqueue(httpCallback);
   }
+
 
   /**
    * Performs an HttpPut to the specified url, will handle the response with the callback.
    *
    * @param httpCallback The Callback object.
    */
-  void performPUT(Callback httpCallback) {
+  void performPut(Callback httpCallback) {
     Request.Builder builder = new Request.Builder();
-    builder.url(operation.getURL());
+    builder.url(operation.getUrl());
     applyHeaders(builder);
     builder.put(RequestBody.create(MEDIA_TYPE_JSON, operation.getParameters()));
     this.getNetworkClient().newCall(builder.build()).enqueue(httpCallback);
   }
+
 
   /**
    * Performs an HttpPost to the specified url, will handle the response with the callback.
    *
    * @param httpCallback The Callback object.
    */
-  void performPOST(Callback httpCallback)  {
+  void performPost(Callback httpCallback)  {
     Request.Builder builder = new Request.Builder();
-    builder.url(operation.getURL());
+    builder.url(operation.getUrl());
     applyHeaders(builder);
     builder.post(RequestBody.create(MEDIA_TYPE_JSON, operation.getParameters()));
     this.getNetworkClient().newCall(builder.build()).enqueue(httpCallback);
   }
+
 
   // Type Enum
   /**

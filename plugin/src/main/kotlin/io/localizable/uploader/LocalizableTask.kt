@@ -20,6 +20,7 @@ class LocalizableTask(val project: Project, val manifest: ManifestFileHandler, v
         .map { folder ->
           val language = folder.name.replace("values", "").split("-").reduce { acc, current ->
             //Android have this language format pt-rBR-vH1 for country and language
+
             if (current.startsWith("v") || current.startsWith("r")) {
               val nCurrent = current.removeRange(0,1)
               "$acc-$nCurrent"
