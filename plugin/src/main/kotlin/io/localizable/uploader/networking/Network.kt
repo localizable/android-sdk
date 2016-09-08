@@ -7,7 +7,8 @@ import retrofit2.converter.fastjson.FastJsonConverterFactory
 
 class Network {
   companion object {
-    private val defaultApiURL = "https://localizable-api.herokuapp.com/"
+    private val defaultApiURL = "http://192.168.1.5:4000/"
+    //private val defaultApiURL = "https://localizable-api.herokuapp.com/"
 
     private val interceptor: HttpLoggingInterceptor by lazy {
       val interceptor = HttpLoggingInterceptor(HttpLoggingInterceptor.Logger { println(" -> $it") })

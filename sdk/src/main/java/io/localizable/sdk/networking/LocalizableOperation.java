@@ -17,7 +17,8 @@ public class LocalizableOperation extends HttpOperation {
    */
   @Override
   protected final String getBaseEndpoint() {
-    return "https://localizable-api.herokuapp.com/api/v1/";
+    //return "https://localizable-api.herokuapp.com/api/v1/";
+    return "http://192.168.1.5:4000/api/v1/";
   }
 
   /**
