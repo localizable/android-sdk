@@ -7,11 +7,11 @@ buildscript {
   }
 
   dependencies {
-    classpath 'io.localizable:localizable:1.0.0'
+    classpath 'io.localizable:sync:1.0.0'
   }
 }
 
-apply plugin: 'localizable.uploader'
+apply plugin: 'localizable.sync'
 
 android {
   compileSdkVersion 24
@@ -43,8 +43,7 @@ dependencies {
   compile 'com.android.support:appcompat-v7:24.2.0'
   compile 'com.android.support:design:24.2.0'
   compile 'com.squareup.okhttp3:okhttp:3.4.1'
-
-  //compile 'io.localizable:sdk:1.0.0'
+  compile 'io.localizable:sdk:1.0.0'
 
   provided "com.google.code.findbugs:jsr305:3.0.0"
   provided "javax.annotation:javax.annotation-api:1.2"

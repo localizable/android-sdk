@@ -12,7 +12,7 @@ configurations {
 
 groupId = "io.localizable"
 version = "1.0.0"
-artifactId = "localizable"
+artifactId = "sync"
 
 dependencies {
     testCompile 'junit:junit:4.11'

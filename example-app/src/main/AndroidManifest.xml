@@ -14,7 +14,7 @@
 
         <meta-data
             android:name="io.localizable.SDK_TOKEN"
-            android:value="iO4nvi-SO-Sbr44JWdb9HA"/>
+            android:value="wdVb5avctUJ3SF1pQEo8dg"/>
 
         <activity
             android:name=".MainActivity"

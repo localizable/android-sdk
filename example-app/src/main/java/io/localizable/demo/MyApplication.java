@@ -2,7 +2,7 @@ package io.localizable.demo;
 
 import android.app.Application;
 
-import io.localizable.demo.sdk.Localizable;
+import io.localizable.sdk.Localizable;
 
 public class MyApplication extends Application {
 

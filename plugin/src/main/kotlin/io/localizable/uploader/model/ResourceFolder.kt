@@ -6,7 +6,7 @@ import java.io.Serializable
 class ResourceFolder(val folder: File, resourceLanguage: String? = null): Comparable<ResourceFolder>, Serializable {
 
   companion object {
-    val defaultResourceFolder = "base"
+    val defaultResourceFolder = "default"
   }
 
   val language: String

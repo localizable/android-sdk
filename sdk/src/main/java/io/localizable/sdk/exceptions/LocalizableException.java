@@ -1,12 +1,16 @@
 package io.localizable.sdk.exceptions;
 
 /**
- * Localizable is the superclass to all the Exceptions thrown by Localizable.
+ * Localizable is the superclass to all the Exceptions thrown by Localizable at Runtime.
  */
-public class LocalizableException extends Exception {
+public class LocalizableException extends RuntimeException {
 
-    protected LocalizableException(String message) {
-        super(message);
-    }
-
+  /**
+   * Default constructor.
+   *
+   * @param message Message to be shown
+   */
+  protected LocalizableException(final String message) {
+    super(message);
+  }
 }
