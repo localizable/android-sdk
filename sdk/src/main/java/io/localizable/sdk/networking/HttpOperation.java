@@ -27,13 +27,20 @@ import java.util.HashMap;
 
 public abstract class HttpOperation {
 
-
   /**
    * Endpoint to append the path and parameters.
    *
    * @return The base endpoint to the request
    */
   protected abstract String getBaseEndpoint();
+
+
+  /**
+   * Endpoint to append the path and parameters.
+   *
+   * @return The base endpoint to the request
+   */
+  protected abstract String getBaseEndpointPath();
 
 
   /**
@@ -101,7 +108,7 @@ public abstract class HttpOperation {
   public URL getUrl() {
     try {
       StringBuilder completeUrlBuilder = new StringBuilder();
-      completeUrlBuilder.append(getBaseEndpoint());
+      completeUrlBuilder.append(getBaseEndpointPath());
       completeUrlBuilder.append(path);
       if (requestType == HttpRequest.NetworkOperationType.GET && parameters != null) {
         boolean first = true;
@@ -122,6 +129,41 @@ public abstract class HttpOperation {
     }
   }
 
+  /**
+   * Returns the encoded path without the parameters for the current operation.
+   *
+   * @return Operation encoded path
+   */
+  public String getEncodedPath() {
+    return getEncodedPath(false);
+  }
+
+
+  /**
+   * Returns the encoded path for the current operation.
+   *
+   * @param shouldAddParameters Flat to signal if parameters should be added to the path
+   *
+   * @return Operation encoded path
+   */
+  public String getEncodedPath(boolean shouldAddParameters) {
+    StringBuilder completeUrlBuilder = new StringBuilder();
+    completeUrlBuilder.append(getBaseEndpointPath());
+    completeUrlBuilder.append(path);
+    if (shouldAddParameters && requestType == HttpRequest.NetworkOperationType.GET && parameters != null) {
+      boolean first = true;
+      for (String key : parameters.keySet()) {
+        if (first) {
+          first = false;
+          completeUrlBuilder.append("?");
+        } else {
+          completeUrlBuilder.append("&");
+        }
+        completeUrlBuilder.append(key).append("=").append(parameters.get(key));
+      }
+    }
+    return completeUrlBuilder.toString().replace(getBaseEndpoint(), "");
+  }
 
   /**
    * Operation parameters as JSON String.

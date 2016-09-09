@@ -1,32 +1,46 @@
 package io.localizable.sdk.networking.client;
 
+import android.content.Context;
+
+import io.localizable.sdk.networking.HttpOperation;
+import io.localizable.sdk.utils.LocalizableLog;
 import okhttp3.MediaType;
 import okhttp3.Protocol;
 import okhttp3.Request;
 import okhttp3.Response;
 import okhttp3.ResponseBody;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.HashMap;
 
 class LocalizableMockResponseHolder {
 
   private static HashMap<String, String> responses;
 
-  public static void loadDefaultResponses() {
-    HashMap<String, String> responses = new HashMap<>();
-    responses.put("/api/v1/languages/platforms/android",
-        "{\"languages\":[\"pt\",\"pt-BR\",\"base\",\"en\"]}");
+  private static void setup() {
+    LocalizableMockResponseHolder.responses = new HashMap<>();
+  }
 
-    responses.put("/api/v1/languages/en",
-        "{\"modified_at\":1000,\"code\":\"en\",\"keywords\":{\"app_name\":\"LocalizableEN\"}}");
+  public static void addResponseForOperation(String fileName, HttpOperation operation,
+                                             Context context) {
+    if (responses == null) {
+      setup();
+    }
 
-    responses.put("/api/v1/languages/base",
-        "{\"modified_at\":1000,\"code\":\"en\",\"keywords\":{\"app_name\":\"LocalizableBASE\"}}");
-
-    LocalizableMockResponseHolder.responses = responses;
+    String response = readFileJsonFromAssets(fileName, context);
+    if (response == null) {
+      response = "{}";
+    }
+    LocalizableLog.error("Adding: " + operation.getEncodedPath(false));
+    LocalizableMockResponseHolder.responses.put(operation.getEncodedPath(), response);
   }
 
   private static String responseForRequest(Request request, boolean startsWith) {
+    LocalizableLog.error("searching: " + request.url().encodedPath());
+    if (responses == null) {
+      setup();
+    }
     String response = null;
     String path = request.url().encodedPath();
     if (startsWith) {
@@ -53,5 +67,21 @@ class LocalizableMockResponseHolder {
         .body(ResponseBody.create(MediaType.parse("application/json"),
             responseForRequest(request, false)))
         .build();
+  }
+
+
+  private static String readFileJsonFromAssets(String fileName, Context context) {
+    try {
+
+      InputStream is = context.getAssets().open(fileName + ".json");
+      int size = is.available();
+      byte[] buffer = new byte[size];
+      is.read(buffer);
+      is.close();
+      return new String(buffer);
+    } catch (IOException e) {
+      throw new RuntimeException(e);
+    }
+
   }
 }

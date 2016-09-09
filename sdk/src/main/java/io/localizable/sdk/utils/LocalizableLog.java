@@ -24,6 +24,9 @@ public class LocalizableLog {
    * @param exception exception to log
    */
   public static void error(Exception exception) {
+    if (exception == null) {
+      return;
+    }
     System.out.println(LocalizablePrefix + "Error " + exception.getMessage());
   }
 
@@ -47,7 +50,7 @@ public class LocalizableLog {
    * @param exception exception to log
    */
   public static void warning(Exception exception) {
-    if (logLevel.value > LocalizableLogLevel.WARNING.value) {
+    if (logLevel.value > LocalizableLogLevel.WARNING.value || exception == null) {
       return;
     }
     System.out.println(LocalizablePrefix + "Warning " + exception.getMessage());
@@ -73,7 +76,7 @@ public class LocalizableLog {
    * @param exception exception to log
    */
   public static void debug(Exception exception) {
-    if (logLevel.value > LocalizableLogLevel.DEBUG.value) {
+    if (logLevel.value > LocalizableLogLevel.DEBUG.value || exception == null) {
       return;
     }
     System.out.println(LocalizablePrefix + "Debug " + exception.getMessage());

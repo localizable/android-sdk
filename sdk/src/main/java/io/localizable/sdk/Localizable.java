@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.os.Build;
+import android.os.LocaleList;
 import android.util.SparseArray;
 
 import io.localizable.sdk.exceptions.UninitializedSdkException;
@@ -13,9 +14,11 @@ import io.localizable.sdk.model.Language;
 import io.localizable.sdk.model.SupportedLanguages;
 import io.localizable.sdk.model.UserDefinedLocale;
 import io.localizable.sdk.networking.async.Network;
+import io.localizable.sdk.utils.LocalizableLog;
 import io.localizable.sdk.utils.ManifestUtils;
 import io.localizable.sdk.utils.StringClassLoader;
 
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
 
@@ -59,7 +62,6 @@ public final class Localizable {
 
 
   private Localizable(@Nonnull Context context) {
-    Network.setup();
     this.apiToken = ManifestUtils.getApiTokenFromMetadata(context);
     this.applicationContext = context;
     this.appStrings = StringClassLoader.loadStringsFromContext(context);
@@ -149,8 +151,7 @@ public final class Localizable {
   }
 
   /**
-   * Set the main locale for the Application Context, if the locale is null sets the locale as the
-   * current primary language.
+   * Set the main locale for the Application Context.
    *
    * @param context Application context
    * @param locale Locale to set
@@ -159,20 +160,46 @@ public final class Localizable {
     Resources resources = context.getResources();
     Configuration configuration = resources.getConfiguration();
     Locale defaultDeviceLocale = getDeviceDefaultLocale(context);
-    Locale newLocale = locale;
 
-    if (newLocale == null) {
-      newLocale = defaultDeviceLocale;
+    if (locale == null) {
+      LocalizableLog.error("trying to set a null locale as the main device locale.");
+      return;
     }
 
-    if (!defaultDeviceLocale.equals(newLocale)) {
-      if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
-        setConfigLocale(configuration, newLocale);
+    if (!defaultDeviceLocale.equals(locale)) {
+      if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+        setConfigLocaleNougat(configuration, locale);
+      } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
+        setConfigLocale(configuration, locale);
       } else {
-        setConfigLocaleCompat(configuration, newLocale);
+        setConfigLocaleCompat(configuration, locale);
       }
       resources.updateConfiguration(configuration, null);
     }
+  }
+
+  /**
+   * Sets the configuration locale using JELLY_BEAN_MR1 > Api version call.
+   *
+   * @param configuration resources configuration
+   * @param locale new locale
+   */
+  @TargetApi(Build.VERSION_CODES.N)
+  private static void setConfigLocaleNougat(Configuration configuration, Locale locale) {
+    LocaleList localeList = configuration.getLocales();
+    List<Locale> locales = new LinkedList<>();
+    locales.add(locale);
+    for (int i = 0; i < localeList.size(); i++) {
+      if (!locales.contains(localeList.get(i))) {
+        locales.add(localeList.get(i));
+      }
+    }
+
+    Locale[] localeArray = new Locale[locales.size()];
+    for (int i = 0; i < locales.size(); i++) {
+      localeArray[i] = locales.get(i);
+    }
+    configuration.setLocales(new LocaleList(localeArray));
   }
 
   /**

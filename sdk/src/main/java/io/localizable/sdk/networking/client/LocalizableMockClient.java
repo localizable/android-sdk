@@ -12,9 +12,7 @@ public class LocalizableMockClient extends OkHttpClient {
   /**
    * Default constructor - Loads the mocked responses to ensure a response is given.
    */
-  public LocalizableMockClient() {
-    LocalizableMockResponseHolder.loadDefaultResponses();
-  }
+  public LocalizableMockClient() { }
 
   /**
    * Call the request.

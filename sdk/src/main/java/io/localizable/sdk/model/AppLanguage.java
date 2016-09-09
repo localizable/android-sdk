@@ -91,6 +91,11 @@ public class AppLanguage implements Serializable {
       LocalizableLog.error("Trying to update Language with invalid object");
       return;
     }
+
+    if (strings == null) {
+      strings = new HashMap<>();
+    }
+
     LocalizableLog.debug("Updating current Language with language: " + updates.toString());
     for (String key : updates.getStrings().keySet()) {
       strings.put(key, updates.getStrings().get(key));
@@ -120,6 +125,15 @@ public class AppLanguage implements Serializable {
     return new FileLoader<AppLanguage>(context, LOCALIZABLE_LANGUAGE_FILE_NAME).loadFile();
   }
 
+
+  /**
+   * Delete the current cached file for AppLanguage.
+   *
+   * @param context Application context
+   */
+  public static void deleteAppLanguageFromDisk(Context context) {
+    new FileLoader<AppLanguage>(context, LOCALIZABLE_LANGUAGE_FILE_NAME).delete();
+  }
 
   @Override
   public final String toString() {

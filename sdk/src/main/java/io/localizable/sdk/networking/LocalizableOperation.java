@@ -10,6 +10,8 @@ import java.util.HashMap;
  */
 public class LocalizableOperation extends HttpOperation {
 
+
+
   /**
    * Localizable base endpoint.
    *
@@ -18,7 +20,17 @@ public class LocalizableOperation extends HttpOperation {
   @Override
   protected final String getBaseEndpoint() {
     //return "https://localizable-api.herokuapp.com/api/v1/";
-    return "http://192.168.1.5:4000/api/v1/";
+    return "http://192.168.1.5:4000";
+  }
+
+  /**
+   * Localizable base endpoint.
+   *
+   * @return Localizable base endpoint
+   */
+  @Override
+  protected final String getBaseEndpointPath() {
+    return getBaseEndpoint() + "/api/v1/";
   }
 
   /**

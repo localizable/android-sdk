@@ -30,6 +30,10 @@ public class Network {
    * @return The current OKHttpClient
    */
   public static OkHttpClient getClient() {
+    if (client == null) {
+      Network.setup();
+    }
+
     return client;
   }
 

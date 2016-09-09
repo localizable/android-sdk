@@ -23,7 +23,7 @@ import java.util.Locale;
  * Supported languages by the App caches and returns the available languages codes.
  */
 public class SupportedLanguages implements Serializable {
-  private static String fileName = "supportedLanguages.dex";
+  private static final String FILENAME = "supportedLanguages.dex";
 
   /**
    * Supported languages by App.
@@ -158,7 +158,7 @@ public class SupportedLanguages implements Serializable {
     if (newSelectedLanguage.equalsIgnoreCase(defaultLanguageCode)
         && LocaleUtils.listOfLanguageCodesEquals(getLanguages(), serverCodes)) {
       if (changesCallback != null) {
-        changesCallback.onNoChangesDetected();
+        changesCallback.onNoChangesDetected(newSelectedLanguage);
       }
       return;
     }
@@ -179,7 +179,7 @@ public class SupportedLanguages implements Serializable {
    * @param context Application context.
    */
   private void saveToFile(Context context) {
-    new FileLoader<SupportedLanguages>(context, fileName).store(this);
+    new FileLoader<SupportedLanguages>(context, FILENAME).store(this);
   }
 
   /**
@@ -189,10 +189,19 @@ public class SupportedLanguages implements Serializable {
    * @return Loaded class from file or a new instance with empty list of locales
    */
   private static SupportedLanguages loadStringsFromFile(Context context) {
-    SupportedLanguages localFile = new FileLoader<SupportedLanguages>(context, fileName).loadFile();
+    SupportedLanguages localFile = new FileLoader<SupportedLanguages>(context, FILENAME).loadFile();
     if (localFile == null) {
       localFile = new SupportedLanguages(context);
     }
     return localFile;
+  }
+
+  /**
+   * Delete the current cached file for SupportedLanguages.
+   *
+   * @param context Application context
+   */
+  public static void deleteAppLanguageFromDisk(Context context) {
+    new FileLoader<SupportedLanguages>(context, FILENAME).delete();
   }
 }
