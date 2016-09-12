@@ -3,10 +3,16 @@ package io.localizable.sdk.networking.client;
 import android.content.Context;
 
 import io.localizable.sdk.Localizable;
+import io.localizable.sdk.networking.HttpOperation;
 import io.localizable.sdk.networking.LocalizableOperation;
 import io.localizable.sdk.networking.async.Network;
 
 public class NetworkMocker {
+
+
+  public static void addResponseForOperation(String fileName, HttpOperation operation, Context context) {
+    LocalizableMockResponseHolder.addResponseForOperation(fileName, operation, context);
+  }
 
   /**
    * Mock response of default request for en language.
