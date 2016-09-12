@@ -17,7 +17,7 @@ public class LocaleUtils {
    * Returns the Localizable locale to use given a list of Localizable locales, checking devices
    * user language settings and localizable user set language.
    *
-   * @param languages Localizable language list, it may contain the "base" language
+   * @param languages Localizable language list, it may contain the "default" language
    * @param context Application context
    * @return Localizable locale tag from the available languages, or null if none match
    */

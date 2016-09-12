@@ -27,7 +27,7 @@ public class AppLanguage implements Serializable {
 
 
   /**
-   * Language code, the default language code is "base" represented in the "values" folder.
+   * Language code, the default language code is "default" represented in the "values" folder.
    */
   private String code;
 
