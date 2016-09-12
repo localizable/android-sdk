@@ -90,7 +90,12 @@ class LocalizableMockCall implements Call {
    */
   @Override
   public void enqueue(final Callback responseCallback) {
-    new AsyncTask<Void, Void, Response>() {
+    try {
+      responseCallback.onResponse(LocalizableMockCall.this, LocalizableMockCall.this.execute());
+    } catch (IOException ignored) {
+      responseCallback.onFailure(LocalizableMockCall.this, null);
+    }
+    /*new AsyncTask<Void, Void, Response>() {
       @Override
       protected Response doInBackground(final Void... voids) {
         try {
@@ -120,7 +125,7 @@ class LocalizableMockCall implements Call {
         }
         LocalizableMockCall.this.finishedExecution();
       }
-    }.execute();
+    }.execute();*/
   }
 
   @Override

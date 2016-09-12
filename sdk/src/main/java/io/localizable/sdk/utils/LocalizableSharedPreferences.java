@@ -8,6 +8,10 @@ public class LocalizableSharedPreferences {
 
   private static final String DEFAULT_LANGUAGE_CODE = "io.localizable.default.language_code";
 
+  public static boolean clear(Context context) {
+    return Helper.clear(context);
+  }
+
   public static void setDefaultLocalizableLanguage(String currentLocalizableLanguageCode,
                                                    Context context) {
     Helper.setString(DEFAULT_LANGUAGE_CODE, currentLocalizableLanguageCode, context);
@@ -20,6 +24,11 @@ public class LocalizableSharedPreferences {
   private static class Helper {
     // Localizable SharedPreferences key
     private static final String SHARED_PREFERENCES_STRING_KEY = "io.localizable.UUID";
+
+    static boolean clear(Context context) {
+      return context.getSharedPreferences(SHARED_PREFERENCES_STRING_KEY,
+          Context.MODE_PRIVATE).edit().clear().commit();
+    }
 
     /**
      * Loads a string from the SharedPreferences with a given key.

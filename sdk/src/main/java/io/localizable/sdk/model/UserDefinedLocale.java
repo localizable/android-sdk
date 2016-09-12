@@ -38,4 +38,14 @@ public class UserDefinedLocale implements Serializable {
     }
     new FileLoader<Locale>(context, filename).store(locale);
   }
+
+  /**
+   * Deletes the stored locale from disk.
+   *
+   * @param context Application context
+   */
+  public static void clearCache(Context context) {
+    userLocale = null;
+    new FileLoader<Locale>(context, filename).delete();
+  }
 }

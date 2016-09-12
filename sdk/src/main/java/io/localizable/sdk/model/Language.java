@@ -33,7 +33,7 @@ public final class Language {
   /**
    * Current locale code, example: pt-PT.
    */
-  private String currentLanguageCode;
+  String currentLanguageCode;
 
   /**
    * Current localizable string, keys are the R int values and the
@@ -159,7 +159,8 @@ public final class Language {
   void checkForNewSupportedLanguages(final Context context) {
     new SupportedLanguages(context, new SupportedLanguagesChangesCallback() {
       @Override
-      public void onNoChangesDetected() {
+      public void onNoChangesDetected(String currentLanguageCode) {
+        Language.this.currentLanguageCode = currentLanguageCode;
         Language.this.syncFromDisk(context);
       }
 
@@ -217,7 +218,7 @@ public final class Language {
     AppLanguage appLanguage = loadCurrentAppLanguageFromDisk(context);
 
     if (appLanguage == null) {
-      LocalizableLog.error("Could not find any language on the disk");
+      LocalizableLog.warning("Could not find any language on the disk");
       return;
     }
 
@@ -246,11 +247,22 @@ public final class Language {
   void syncFromDisk(final Context context) {
     AppLanguage appLanguage = loadCurrentAppLanguageFromDisk(context);
     if (appLanguage == null) {
-      LocalizableLog.error("Could not find any language on the disk");
+      fetch(context);
       return;
     }
     updateInstanceWithAppLanguage(appLanguage);
     updateStrings(appLanguage, context);
+  }
+
+  /**
+   * Load current strings to selected language from server.
+   *
+   * @param context Application context
+   */
+  void fetch(final Context context) {
+    AppLanguage newLanguage = new AppLanguage(this.currentLanguageCode,
+        new HashMap<String, String>());
+    updateStrings(newLanguage, context);
   }
 
 
