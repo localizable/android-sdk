@@ -5,7 +5,7 @@ public class LocalizableLog {
 
   private static String LocalizablePrefix = "Localizable ~~> ";
 
-  public static LocalizableLogLevel logLevel = LocalizableLogLevel.DEBUG;
+  public static LocalizableLogLevel logLevel = LocalizableLogLevel.ERROR;
 
 
   /**

@@ -49,7 +49,6 @@ public abstract class HttpOperation {
    * @return The user agent or null
    */
   protected String getUserAgent() {
-    LocalizableLog.error("GET User-Agent not implemented");
     return null;
   }
 

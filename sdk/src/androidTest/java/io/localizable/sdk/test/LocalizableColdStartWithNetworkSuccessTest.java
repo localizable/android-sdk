@@ -13,18 +13,16 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 @RunWith(AndroidJUnit4.class)
-public class LocalizableLoadFromCacheTest extends LocalizableBaseAndroidTest {
+public class LocalizableColdStartWithNetworkSuccessTest extends LocalizableBaseAndroidTest {
 
   @Override
   public void setup() {
     super.setup();
     NetworkMocker.setupMockedResponsesBaseStrings(testApplicationContext());
-    Localizable.setup(testApplicationContext());
-    NetworkMocker.clearMockedResponses();
   }
 
   @Test
-  public void  checkLocalizableStringsGetString() throws InterruptedException {
+  public void checkLocalizableStringsGetString() throws InterruptedException {
     Localizable.setup(testApplicationContext());
     assertThat(Localizable.getString(R.string.string1), equalTo("en"));
   }

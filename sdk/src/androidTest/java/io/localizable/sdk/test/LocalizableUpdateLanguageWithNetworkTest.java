@@ -1,22 +1,25 @@
 package io.localizable.sdk.test;
 
-import static org.hamcrest.Matchers.equalTo;
-import static org.junit.Assert.assertThat;
 
 import android.support.test.runner.AndroidJUnit4;
+
+import org.junit.Before;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+
+import java.util.Locale;
 
 import io.localizable.sdk.Localizable;
 import io.localizable.sdk.LocalizableBaseAndroidTest;
 import io.localizable.sdk.networking.client.NetworkMocker;
 
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import static org.hamcrest.Matchers.equalTo;
+import static org.junit.Assert.assertThat;
 
 @RunWith(AndroidJUnit4.class)
-public class LocalizableUpdateDashboardTest extends LocalizableBaseAndroidTest {
+public class LocalizableUpdateLanguageWithNetworkTest extends LocalizableBaseAndroidTest {
 
-
-  @Override
+  @Before
   public void setup() {
     super.setup();
     NetworkMocker.setupMockedResponsesBaseStrings(testApplicationContext());
@@ -27,8 +30,8 @@ public class LocalizableUpdateDashboardTest extends LocalizableBaseAndroidTest {
     Localizable.setup(testApplicationContext());
     assertThat(Localizable.getString(R.string.string1), equalTo("en"));
 
-    NetworkMocker.setupMockedResponseForEnUpdate(testApplicationContext());
-    Localizable.setup(testApplicationContext());
-    assertThat(Localizable.getString(R.string.string1), equalTo("updates"));
+    NetworkMocker.setupMockedResponseForPtBr(testApplicationContext());
+    Localizable.setLocale(new Locale("pt", "BR"));
+    assertThat(Localizable.getString(R.string.string1), equalTo("pt-BR"));
   }
 }

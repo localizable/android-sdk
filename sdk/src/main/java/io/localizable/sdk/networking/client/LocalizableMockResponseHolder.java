@@ -22,6 +22,10 @@ class LocalizableMockResponseHolder {
     LocalizableMockResponseHolder.responses = new HashMap<>();
   }
 
+  public static void clear() {
+    setup();
+  }
+
   public static void addResponseForOperation(String fileName, HttpOperation operation,
                                              Context context) {
     if (responses == null) {
@@ -32,12 +36,10 @@ class LocalizableMockResponseHolder {
     if (response == null) {
       response = "{}";
     }
-    LocalizableLog.error("Adding: " + operation.getEncodedPath(false));
     LocalizableMockResponseHolder.responses.put(operation.getEncodedPath(), response);
   }
 
   private static String responseForRequest(Request request, boolean startsWith) {
-    LocalizableLog.error("searching: " + request.url().encodedPath());
     if (responses == null) {
       setup();
     }

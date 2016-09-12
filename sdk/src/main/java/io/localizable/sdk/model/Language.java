@@ -14,7 +14,6 @@ import io.localizable.sdk.utils.SupportedLanguagesChangesCallback;
 import okhttp3.Call;
 
 import java.io.IOException;
-import java.io.StreamCorruptedException;
 import java.util.HashMap;
 
 /**
@@ -219,7 +218,7 @@ public final class Language {
     AppLanguage appLanguage = loadCurrentAppLanguageFromDisk(context);
 
     if (appLanguage == null) {
-      LocalizableLog.error("Could not find any language on the disk");
+      LocalizableLog.warning("Could not find any language on the disk");
       return;
     }
 
