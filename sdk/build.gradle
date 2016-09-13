@@ -1,5 +1,16 @@
 apply plugin: 'com.android.library'
-apply plugin: 'maven'
+apply plugin: 'com.vanniktech.android.javadoc'
+
+buildscript {
+  repositories {
+    mavenCentral()
+  }
+
+  dependencies {
+    classpath android_build_tools_version
+    classpath 'com.vanniktech:gradle-android-javadoc-plugin:0.2.1'
+  }
+}
 
 android {
   compileSdkVersion 24
@@ -16,18 +27,8 @@ android {
   buildTypes {
     release {
       minifyEnabled false
-      proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
     }
   }
-}
-
-repositories {
-  mavenCentral()
-  mavenLocal()
-}
-
-configurations {
-  includeInJar
 }
 
 dependencies {
@@ -39,19 +40,24 @@ dependencies {
   provided "com.google.code.findbugs:jsr305:3.0.0"
   provided "javax.annotation:javax.annotation-api:1.2"
 
-  compile 'com.squareup.retrofit2:retrofit:2.1.0'
   compile 'org.ligboy.retrofit2:converter-fastjson-android:2.1.0'
   compile 'com.squareup.okhttp3:logging-interceptor:3.4.1'
+}
 
+apply plugin: 'maven'
+
+
+configurations {
+  includeInJar
 }
 
 uploadArchives {
   repositories {
     mavenDeployer {
       repository(url: mavenLocal().url)
-      pom.groupId = "io.localizable"
-      pom.artifactId = "sdk"
-      pom.version = "1.0.0"
+      pom.groupId = localizable_group_id
+      pom.artifactId = localizable_artifact_sdk_id
+      pom.version = localizable_sdk_version
     }
   }
 }

@@ -1,7 +1,7 @@
 package io.localizable.sdk.exceptions;
 
 /**
- * NoSdkTokenFoundException is thrown when the SDK token is not found on the manifest file.
+ * UninitializedSdkException is thrown when the sdk is used without being initialized first.
  */
 public class UninitializedSdkException extends LocalizableException {
 

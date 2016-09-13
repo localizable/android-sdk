@@ -13,7 +13,6 @@ import io.localizable.sdk.exceptions.UninitializedSdkException;
 import io.localizable.sdk.model.Language;
 import io.localizable.sdk.model.SupportedLanguages;
 import io.localizable.sdk.model.UserDefinedLocale;
-import io.localizable.sdk.networking.async.Network;
 import io.localizable.sdk.utils.LocalizableLog;
 import io.localizable.sdk.utils.ManifestUtils;
 import io.localizable.sdk.utils.StringClassLoader;

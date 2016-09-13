@@ -1,7 +1,9 @@
 package io.localizable.sdk.exceptions;
 
 /**
- * NoSdkTokenFoundException is thrown when the SDK token is not found on the manifest file.
+ * LocalizableMetadataNotFoundException is thrown when the SDK cannot fetch the metadata token
+ * from the manifest file.
+ * <br>
  * Check ManifestUtils for more information.
  */
 public class LocalizableMetadataNotFoundException extends LocalizableException {

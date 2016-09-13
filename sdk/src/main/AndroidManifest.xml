@@ -1,6 +1,3 @@
-<manifest xmlns:android="http://schemas.android.com/apk/res/android"
-          package="io.localizable.sdk">
-
-    <application android:label="Localizable" />
-
+<manifest package="io.localizable.sdk">
+    <application />
 </manifest>

@@ -59,7 +59,7 @@ public class LocalizableOperation extends HttpOperation {
 
   /**
    * Default Localizable operation headers.
-   * <br/>
+   * <br>
    * Content-Type + Accept
    *
    * @return Default Localizable operation headers

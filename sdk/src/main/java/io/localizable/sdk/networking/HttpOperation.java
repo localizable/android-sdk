@@ -12,16 +12,16 @@ import java.util.HashMap;
 
 /**
  * Base HttpOperation.
- * <br/>
+ * <br>
  * Contains all components of a Http request
- * <br/>
+ * <br>
  * Headers - Custom headers and customizable user-agent
- * <br/>
+ * <br>
  * RequestType - Only GET, PUT or POST supported for now
- * <br/>
+ * <br>
  * Parameters - Automatic add parameters to URL if is a GET or send them as Body if the request is
  * a POST or PUT
- * <br/>
+ * <br>
  * Path - path to append to the base endpoint
  */
 

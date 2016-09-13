@@ -54,6 +54,8 @@ public final class Language {
    * @param appStrings Application strings from resources
    * @param context Application context
    * @param apiToken Localizable API token
+   *
+   * @return Singleton instance of Language
    */
   public static Language loadLanguage(SparseArray<String> appStrings, Context context,
                                       String apiToken) {

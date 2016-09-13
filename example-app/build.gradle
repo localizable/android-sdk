@@ -1,21 +1,24 @@
 apply plugin: 'com.android.application'
+apply plugin: 'localizable.sync'
 
 buildscript {
+  ext.localizable_version = '1.0.0-alpha'
+
   repositories {
-    mavenCentral()
     mavenLocal()
+    mavenCentral()
   }
 
   dependencies {
-    classpath 'io.localizable:sync:1.0.0'
+    classpath 'com.android.tools.build:gradle:2.1.3'
+    classpath "io.localizable:sync:$localizable_version"
   }
 }
-
-apply plugin: 'localizable.sync'
 
 android {
   compileSdkVersion 24
   buildToolsVersion "24.0.2"
+
   defaultConfig {
     applicationId "io.localizable.demo"
     minSdkVersion 19
@@ -37,16 +40,14 @@ android {
 }
 
 dependencies {
-  compile fileTree(dir: 'libs', include: ['*.jar'])
-  testCompile 'junit:junit:4.12'
+  compile "io.localizable:sdk:$localizable_version"
+
   compile 'com.android.support:support-v4:24.2.0'
   compile 'com.android.support:appcompat-v7:24.2.0'
   compile 'com.android.support:design:24.2.0'
   compile 'com.squareup.okhttp3:okhttp:3.4.1'
-  compile 'io.localizable:sdk:1.0.0'
+  compile 'org.jetbrains:annotations-java5:15.0'
 
   provided "com.google.code.findbugs:jsr305:3.0.0"
   provided "javax.annotation:javax.annotation-api:1.2"
-  compile 'org.jetbrains:annotations-java5:15.0'
-
 }

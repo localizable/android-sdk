@@ -2,8 +2,9 @@
           xmlns:tools="http://schemas.android.com/tools"
           package="io.localizable.sdk">
 
-    <application tools:replace="android:label" android:label="@string/app_name">
+    <application tools:strict="android:label" android:label="@string/app_name">
         <meta-data
+            tools:strict="android:value"
             android:name="io.localizable.SDK_TOKEN"
             android:value="w428F9ryFsKnVkw6EjKt3g"/>
     </application>

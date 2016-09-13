@@ -25,7 +25,7 @@ public final class ManifestUtils {
 
   /**
    * Retrieves the API Token from the metadata in the AndroidManifest.xml file.
-   * <meta-data android:name="io.localizable.SDK_TOKEN" android:value="abc123"/>
+   * meta-data android:name="io.localizable.SDK_TOKEN" android:value="abc123"
    *
    * @param context Your application's context object.
    * @return The value of the meta-data "io.localizable.SDK_TOKEN" field.

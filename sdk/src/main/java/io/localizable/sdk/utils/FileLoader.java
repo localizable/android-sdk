@@ -74,6 +74,7 @@ public class FileLoader<T extends Serializable> {
   /**
    * Delete the file in the Localizable Folder.
    *
+   * @return deletion result
    */
   public boolean delete() {
     try {

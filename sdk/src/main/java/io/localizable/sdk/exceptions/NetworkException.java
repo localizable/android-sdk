@@ -1,12 +1,14 @@
 package io.localizable.sdk.exceptions;
 
 /**
- * NoSdkTokenFoundException is thrown when the SDK token is not found on the manifest file.
+ * Network Exception is thrown when the SDK finds encounters a network error.
  */
 public class NetworkException extends Exception {
 
   /**
    * Default constructor.
+   *
+   * @param message exception message
    */
   public NetworkException(String message) {
     super("Error contacting server " + message);

@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="io.localizable.demo">
+          xmlns:tools="http://schemas.android.com/tools"
+          package="io.localizable.demo">
 
     <uses-permission android:name="android.permission.INTERNET" />
 
@@ -13,8 +14,9 @@
         android:theme="@style/AppTheme">
 
         <meta-data
+            tools:replace="android:value"
             android:name="io.localizable.SDK_TOKEN"
-            android:value="<API Token>"/>
+            android:value="token" />
 
         <activity
             android:name=".MainActivity"

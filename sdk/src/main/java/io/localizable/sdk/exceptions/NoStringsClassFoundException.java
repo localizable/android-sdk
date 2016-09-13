@@ -1,7 +1,7 @@
 package io.localizable.sdk.exceptions;
 
 /**
- * NoSdkTokenFoundException is thrown when the SDK token is not found on the manifest file.
+ * NoStringsClassFoundException is thrown when the SDK cannot find the project R.strings class.
  */
 public class NoStringsClassFoundException extends LocalizableException {
 
