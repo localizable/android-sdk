@@ -7,7 +7,7 @@ buildscript {
   }
 
   dependencies {
-    classpath android_build_tools_version
+    classpath ANDROID_BUILD_TOOLS_VERSION
     classpath 'com.vanniktech:gradle-android-javadoc-plugin:0.2.1'
   }
 }
@@ -44,20 +44,4 @@ dependencies {
   compile 'com.squareup.okhttp3:logging-interceptor:3.4.1'
 }
 
-apply plugin: 'maven'
-
-
-configurations {
-  includeInJar
-}
-
-uploadArchives {
-  repositories {
-    mavenDeployer {
-      repository(url: mavenLocal().url)
-      pom.groupId = localizable_group_id
-      pom.artifactId = localizable_artifact_sdk_id
-      pom.version = localizable_sdk_version
-    }
-  }
-}
+apply from: 'gradle/deploy.gradle'

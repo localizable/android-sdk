@@ -1,27 +1,56 @@
 
+
 allprojects {
 
   ext {
-    localizable_sdk_version = "1.0.0-alpha"
-    localizable_group_id = "io.localizable"
-    localizable_artifact_plugin_id = "sync"
-    localizable_artifact_sdk_id = "sdk"
-    android_build_tools_version = "com.android.tools.build:gradle:2.1.3"
+    GROUP_ID = "io.localizable"
 
-    signing_info = System.env.HOME
+    SDK_VERSION = "1.0.0-SNAPSHOT"
+    ARTIFACT_SDK_ID = "sdk"
+
+    PLUGIN_VERSION = "1.0.0-SNAPSHOT"
+    ARTIFACT_PLUGIN_ID = "sync"
+
+    ANDROID_BUILD_TOOLS_VERSION = "com.android.tools.build:gradle:2.1.3"
+
+    POM_PACKAGING = "aar"
+
+    POM_NAME = "Localizable"
+    POM_DESCRIPTION = "Localizable sdk"
+    POM_URL = "https://github.com/localizable/android-sdk"
+    POM_SCM_URL = "https://github.com/localizable/android-sdk"
+    POM_SCM_CONNECTION = "scm:hg:https://github.com/localizable/android-sdk"
+    POM_SCM_DEV_CONNECTION = "scm:hg:https://github.com/localizable/android-sdk"
+    POM_LICENCE_NAME = "MIT License"
+    POM_LICENCE_URL = "http://www.opensource.org/licenses/mit-license.php"
+    POM_LICENCE_DIST = "repo"
+    POM_DEVELOPER_ID = "boliveira"
+    POM_DEVELOPER_NAME= "Bruno Oliveira"
+
+    NEXUS_USERNAME = "$System.env.NEXUS_USERNAME"
+    NEXUS_PASSWORD = "$System.env.NEXUS_PASSWORD"
+
+    SNAPSHOT_REPOSITORY_URL = "https://oss.sonatype.org/content/repositories/snapshots"
+    RELEASE_REPOSITORY_URL = "https://oss.sonatype.org/service/local/staging/deploy/maven2"
+
+    SIGNING_KEY_ID = "$System.env.SIGNING_KEY_ID"
+    SIGNING_PASSWORD = "$System.env.SIGNING_PASSWORD"
+    SIGNING_SECRET_KEY_RING_FILE = "${rootDir}/deployment_key.gpg"
   }
+
+  ext."signing.keyId" = SIGNING_KEY_ID
+  ext."signing.password" = SIGNING_PASSWORD
+  ext."signing.secretKeyRingFile" = SIGNING_SECRET_KEY_RING_FILE
+
 
   repositories {
     jcenter()
     mavenLocal()
+    maven {
+      url "https://oss.sonatype.org/content/repositories/snapshots/"
+    }
   }
 }
-
-task printVars {
-
-  println("$signing_info")
-}
-
 
 task clean(type: Delete) {
   delete rootProject.buildDir
