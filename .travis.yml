@@ -8,24 +8,27 @@ env:
   - secure: wN/vzHotMv+0JWL43vcXqvVOwdGBAWXfl5z9Rx/Ex5zT0YCbs/xWvLx+428uhKIT7G7zVJeR+YCCL5AKFZqNDohsAn1FgFVzRYVoqgz06yjzv5s/xtEhMtMGCx8v5stH/w1i7yyGeimMchmz3dOmYUvEZFlJDOa3x2IAdqKYAUUMRkse5kydffaK8umAkg8qO/rW22ClcRv0mu+kaCTuMBZvhEU4JFeBM6o9NRYJvfkBBMrzQbqT48gKxCUu0YJsgoxBsHIN3Chg+yBbcAG2YVvPvkhj/QR347T8MwWY7PcMCfUU0dFvN1MJlNFyHP07crPI2rNGhhHvDqXeKxhsGDB1lzYJ7NlO1O8yNxYwJ7dOW+MzSw1Ct6KYZl33I9CmA+w9JDi9FBiXqWU7vnR9qhe/j6PY+gzx0om1xjnE5ZsdpflyFFWGqB1pypHOnM6qfh0oNj0sW8EpFZ7hX0/TQHC9sSD5ijrP/Aw3fg2pnsfxEo3J18ZTxtIHUuVjoRFBP92dgQiF+mHY0bEzjZKbQDHtpRk7JLJ/zE6lHAbO/Y4GMUBh1t8wZxO3j6HgXFHuIulfOWtz5vHU2hHWAu8O9PAFlIEzO8/xLsR7eF5sJcIgdYmIIU191BswdET8R20Qx644bDt4kV7wi2EKyZsQwG5wM6GQyhTaJdGZq8hEURg=
 android:
   components:
-  - build-tools-24.0.2
-  - android-24
-  - sys-img-x86-android-21
-before_cache:
-- rm -f $HOME/.gradle/caches/modules-2/modules-2.lock
+    - tools
+    - platform-tools
+    - build-tools-24.0.2
+    - android-24
+    - extra-android-m2repository
+    - sys-img-armeabi-v7a-android-18
 cache:
   directories:
-  - "$HOME/.gradle/caches/"
-  - "$HOME/.gradle/wrapper/"
+    - $HOME/.m2
+    - $HOME/.gradle
+notifications:
+  email: false
 before_script:
-- echo no | android create avd --force -n test -t android-22 --abi armeabi-v7a
-- emulator -avd test -no-audio -no-window &
-- android-wait-for-emulator
-- adb shell input keyevent 82 &
+  - echo no | android create avd --force -n test -t android-18 --abi armeabi-v7a
+  - emulator -avd test -no-audio -no-window &
+  - android-wait-for-emulator
+  - adb shell input keyevent 82
 script:
-- gradle build connectedCheck
-- gradle :sdk:uploadArchives
-- gradle :plugin:uploadArchives
+  - gradle build connectedCheck
+  - gradle :sdk:uploadArchives
+  - gradle :plugin:uploadArchives
 before_install:
-- openssl aes-256-cbc -K $encrypted_a318a1fa7ccb_key -iv $encrypted_a318a1fa7ccb_iv
+  - openssl aes-256-cbc -K $encrypted_a318a1fa7ccb_key -iv $encrypted_a318a1fa7ccb_iv
   -in deployment_key.gpg.enc -out deployment_key.gpg -d
