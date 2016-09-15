@@ -1,8 +1,0 @@
-io.localizable.sdk
-io.localizable.sdk.exceptions
-io.localizable.sdk.model
-io.localizable.sdk.networking
-io.localizable.sdk.networking.async
-io.localizable.sdk.networking.callback
-io.localizable.sdk.networking.client
-io.localizable.sdk.utils
