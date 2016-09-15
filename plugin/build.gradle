@@ -1,9 +1,5 @@
 apply plugin: "kotlin"
 
-configurations {
-  includeInJar
-}
-
 dependencies {
   testCompile 'junit:junit:4.11'
 
