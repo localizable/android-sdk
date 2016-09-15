@@ -6,5 +6,12 @@
 .DS_Store
 /build
 /captures
+/javadoc
+
+/example/.gradle
+/example/local.properties
+/example/.idea/workspace.xml
+/example/.idea/libraries
+
 
 deployment_key.gpg

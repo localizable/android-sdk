@@ -1,1 +1,1 @@
-include ':example-app', ':plugin', ':sdk'
+include ':plugin', ':sdk'
