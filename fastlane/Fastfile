@@ -1,0 +1,73 @@
+# Customise this file, documentation can be found here:
+# https://github.com/fastlane/fastlane/tree/master/fastlane/docs
+# All available actions: https://github.com/fastlane/fastlane/blob/master/fastlane/docs/Actions.md
+# can also be listed using the `fastlane actions` command
+
+# Change the syntax highlighting to Ruby
+# All lines starting with a # are ignored when running `fastlane`
+
+# If you want to automatically update fastlane if a new version is available:
+# update_fastlane
+
+# This is the minimum version number required.
+# Update this, if you use features of a newer version
+fastlane_version "1.103.0"
+
+default_platform :android
+
+platform :android do
+
+  commit = last_git_commit
+
+  before_all do
+    ENV["SLACK_URL"] = ENV['EC_LOCALIZABLE_SLACK_URL']
+  end
+
+  desc "Master commit"
+  lane :ci do
+    test_sdk
+    deploy_sdk
+    deploy_plugin
+  end
+
+
+  desc "Runs all the SDK tests"
+  lane :test_sdk do
+    gradle(task: "sdk:connectedAndroidTest")
+  end
+
+  lane :deploy_sdk do
+    gradle(task: "sdk:uploadArchives")
+  end
+
+  lane :deploy_plugin do
+    gradle(task: "plugin:uploadArchives")
+  end
+
+  # You can define as many lanes as you want
+  after_all do |lane|
+    slack_msg(
+      msg: "Successfully ran Travis-CI",
+      success: true
+    )
+  end
+
+  error do |lane, exception|
+    slack_msg(
+      msg: exception.message,
+      success: false
+    )
+  end
+
+  private_lane :slack_msg do |params|
+   slack(
+     payload: {
+       'Message' => commit[:message],
+       'Author' => commit[:author],
+       'Commit' => "https://github.com/localizable/android-sdk/commit/#{commit[:commit_hash]}"
+     },
+     default_payloads: [],
+     message: params[:msg],
+     success: params[:success])
+ end
+end
