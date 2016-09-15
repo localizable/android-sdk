@@ -21,7 +21,7 @@ notifications:
   slack:
     secure: F6k3izrPf5xxUI2nC3UAlAoQpoF6myU2LndyRHip2iXm7+syHos4Xp7tK4ZehYnImT+5cFVhyrbWqTasWgDSyIz7RQkQ1ZBII2RZbo787ew4ZERBOchynuECKZQZqoHCO3b8LwsRuDOi+3H/06sMzbybaJYOphdJMTA2HXktVcU0hlKbILF2MfB50MV+0vS7lCretesPyeWSX8AAGlB5BLsKRXagvzysZf8n9SuX4rzTf+ulprzrfNkFa2OeUyIAsJO+5LTQpVIjBGptAt8yEtsr45HhfOMS7yTZYsKQyWRZgJTf4loaYcHXo0f9gSYDNknkCxVzDFgW/1MnMDuOkL+PXnce9NFDgOeIOTDikCWS7U8GimqgBj6vOGs7IGloKGKaiwkVyNqzJUERsLXrXt5WX0B7Fq187MdIp0jaskho/ieMEwIHTuOKTZB+LIRJ2jsOxwEc6aJKILEtP2AvG7Bckf+8iFPsC2kVOPG0LSaEE6mKn8XXU4X6bTYJD1ZWoWZ+6tTcaoTv0guGmVaViHGda1x4GDWuJhBlW0laUfGjtBxLXfClYz5ML6kFqCpp4xg+U62layN+Dtqm7vJ2LvQ1vTJd2jImNMRElvS+1N0dCyG+8Ufr52Re7sc7CxPNbyY1KL8ufCRsxJb99kItcqAzlcXNuBItC9mNAF2tfXY=
 before_install:
-- rvm install 2.3
+- rvm install ruby-2.3.0
 - openssl aes-256-cbc -K $encrypted_a318a1fa7ccb_key -iv $encrypted_a318a1fa7ccb_iv
   -in deployment_key.gpg.enc -out deployment_key.gpg -d
 install:
