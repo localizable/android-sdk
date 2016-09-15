@@ -20,7 +20,6 @@ class LocalizableTask(val project: Project, val manifest: ManifestFileHandler, v
         .map { folder ->
           val language = folder.name.replace("values", "").split("-").reduce { acc, current ->
             //Android have this language format pt-rBR-vH1 for country and language
-
             if (current.startsWith("v") || current.startsWith("r")) {
               val nCurrent = current.removeRange(0,1)
               "$acc-$nCurrent"
@@ -87,7 +86,7 @@ class LocalizableTask(val project: Project, val manifest: ManifestFileHandler, v
     try {
       Network.service.UploadLanguages(manifest.localizableToken, localizableServiceObject).enqueue(object : Callback<Void> {
         override fun onFailure(call: Call<Void>?, t: Throwable?) {
-          println("Error updating strings")
+          println("Error updating Localizable Strings")
           t?.printStackTrace()
         }
 
@@ -96,7 +95,7 @@ class LocalizableTask(val project: Project, val manifest: ManifestFileHandler, v
             if (it.isSuccessful) {
               cacheStringsByLanguage()
             } else {
-              println("Error contacting server ${it.headers()}")
+              println("Error contacting Localizable Server ${it.headers()}")
             }
           }
         }

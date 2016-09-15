@@ -3,7 +3,7 @@ package io.localizable.uploader.helper
 import io.localizable.uploader.model.LanguageStrings
 import java.io.*
 
-
+@Suppress("UNCHECKED_CAST")
 fun loadFile(path: String): List<LanguageStrings> {
   try {
     val file = File(path)

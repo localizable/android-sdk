@@ -4,11 +4,9 @@ import com.android.build.gradle.AppExtension
 import com.android.build.gradle.AppPlugin
 import com.android.build.gradle.internal.dsl.BuildType
 import io.localizable.uploader.helper.LocalizableHelper
-import io.localizable.uploader.xml.ManifestFileHandler
 import org.gradle.api.Project
 import org.gradle.api.Task
 import org.gradle.api.tasks.TaskContainer
-import org.gradle.api.tasks.TaskOutputs
 
 class ProjectHandler(val project: Project) {
 
