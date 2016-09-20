@@ -1,36 +1,42 @@
 language: android
+
 jdk: oraclejdk8
-cache:
-- bundler
-android:
-  components:
-  - tools
-  - platform-tools
-  - build-tools-24.0.2
-  - android-24
-  - extra-android-m2repository
-  - sys-img-armeabi-v7a-android-18
-before_install:
-- rvm install ruby-2.3.0
-- openssl aes-256-cbc -K $encrypted_a318a1fa7ccb_key -iv $encrypted_a318a1fa7ccb_iv
-  -in deployment_key.gpg.enc -out deployment_key.gpg -d
-install:
-- bundle install
-before_script:
-- android update sdk --filter platform-tools,android-16,extra-android-support,$ANDROID_SDKS --no-ui --force
-- echo no | android create avd --force -n test -t $ANDROID_TARGET --abi $ANDROID_ABI
-- emulator -avd test -no-skin -no-audio -no-window &
-- android-wait-for-emulator
-script:
-- bundle exec fastlane ci
+
 env:
   matrix:
-  - ANDROID_SDKS=android-21  ANDROID_TARGET=android-21  ANDROID_ABI=armeabi-v7a
-  - ANDROID_SDKS=android-18  ANDROID_TARGET=android-18  ANDROID_ABI=armeabi-v7a
-  - ANDROID_SDKS=android-15  ANDROID_TARGET=android-15  ANDROID_ABI=armeabi-v7a
+  - ANDROID_SDKS=android-21 ANDROID_TARGET=android-21 ANDROID_ABI=armeabi-v7a
+  - ANDROID_SDKS=android-18 ANDROID_TARGET=android-18 ANDROID_ABI=armeabi-v7a
+  - ANDROID_SDKS=android-15 ANDROID_TARGET=android-15 ANDROID_ABI=armeabi-v7a
   global:
   - secure: bT3WN6aYzArs00euFTUeXxLGw2gvArD6YOYp0AnXDv8o9VuvNMk7uJqla1JYok7Nc8VRGrFzzxYta91vz+rXWjWib/D9oA27tT2Ha3InI49vE33RJqSoWVi3AwX7XgIIaEtr3k+hb0ganbDaEgUxWuW2A1xCHaUBKQ7CBXi1SpkSYMMq4/2oRTd5KB/HFlWa7iEiIqBEcybNyHZjiP55EnvLZ9HmHuZAIIi9q3g5Rt6DUgbVQ/esVIp6xNfsXgICevLgY37Kb2I4gHMWrjb38HZbxjklyTpdcxGFxGj2PDHM+BZiQ0upsuEowjxMQBPjxj5dRIpNzBoTAyeD4zVCtl41JbE/k0wVMQ4b9CPxVlAKnI00xPGQSNDEquG0N2n/7SyGayJi95LqVTFRwIQoeyItZd9Ns7MPkNPlTq1lipTNyDRPElTtXOE78BD7vuCRqBaO9zO7V3Z7nfF8oj2lUb4kH2PG9P7RJkDbdceQJ7cU5WUdqfdYiAdBma+/MopGXd4nlu/eBGIJP7W6V3zt1Wwnctc+THTJX9LNe1PzEqoC2+xBi6R51kx0V1Oqjxil6kTeqYezqAEIPZPZltGgZUDXmvo1ivpO5rBFaMWE6699xbHqti3M8Ro3G5LdybWEUF2XpCiBU3v0QT3+fio8FYaSJm/phHG83Mh0TxTSQMY=
   - secure: RocRBr2D4Hyfajx9XhhasGpbDTKKmR1+0uLGP/OPjGXLMlhjaBYBB9ch37P1NFJdZkpaw2b7mz3/6oBtub4t0hIJDU6GLfnINpGwZh3pJA/nqmvuAhOZy/h7IIDzrUohwvOPfPuG7Ae0n3j1FCizktBJGC/tIpDQ/9SfNNFVvh7gIt0Rr7PMVJb6xK2jHJbO1cIkOXmPeviS+7gs6df/2eaqZQQX2yMDNeTCA4u9//6PPsQ45T6xJVYfPe0WGluK/nMdZQLHPzEiYatP0Kj24vKWUT4IQcakGTz5S227cswH4A0H3pwC5sRECOX7R0qHwxwoZw/FO8067yCHcZdSL+EXS/F2BTIfhHpP7QsgRiYTXmTTk8BEme/l/uyg/TVJl6NUKhnHLGztSZYTSDR0j+u3yRouCK9HBSNVFjlpAd62LVZoY44PSM44MvAF4233Ohb/SrVYE48wBssunUZp1YjgRl8oYdqhi5+j48kb+aoT67Ps1ULOPUEBwD2vN8gDpoyqAnq9kYF7+ekUBf6vGwAu8I4zNYZZNGZSvxy8jKvT5bvfNCJCfWvbZzdkh1Fu4k/QQQQT263ZlPfHwzmAIsmDjpOBxos4WnTcVwGHScN8VNSTKcuV+JdLMvgGoUYrik27vfRmzrul0O8XUVJj3RZfKS+2T/f4glX8NJTEyPk=
   - secure: pNI4FjzZwpSFY2myPg2K+TNjt+Qm4LGTHOp7xzB+sRSSu58L2UFLbzq+OQsPTb8r1m7F2r4zciuznEUDW01BrKUOlfhuykWHFJviGSPfKtS8xC25kNBBPzFATpd1WrwrIGatgANGSUnsu3/xetAVXjjmZ0IXP9gZKrlNU3dNWeTdPfoto32ApGmyY7qJui6qHfB+mENEGgNgqx61pVWX/GRYAgpk+JgG/BDjhNeyaeJ7bZ16vyqLUoLJ8YS6YcdboJMFi+9ES2F9mbEAfRciyFHxxt45W11mHqM7djutSQ087PktQLjdGIsGk2Sq9wyEOWdj4EDE94Uga4bYceZVFXnl70hLQpQPk0JafNapr1xANtg2olPaaCc5SWaF0ClbOCkfP7ekDSPp3Axe9zBMAXq0tNPpu4Sp8PKLv+APH+J52KM8g24ZzcOp8SvPeTexFCZ3sYweEQJsQ68H+b0oqpEuwOO8Q5prSI8TFj6ZCtS+/9jaSjMe6QN4SNrgOe9ddlCoeTsW2Dz/wyeDm3k5e5+dv8TmPEBCD7+NmoL0I8+t5rqxvLndCsuiDBy4Pui7vGrer6WO6ekVKRs+JnlKWoLGWbQlOeIG7BWKfSOZSg9glUCGPd2x7SLu2OvFcUBXK4ZWCXHnP4xh69ySujMyqbawe3fLRYlOWJ97BNhZZXw=
   - secure: I9XM2OVb6p1NIX6aaumH6qumRDa1afgkKn6FcTAW4EXcz9n/FMbj4xC8Dot0viaMQsJ6MNbmjAdsdFwYhCkBPVEsYs+0xpXetfgb+ydHsBLi/RqGSKJFj2oXFS/sOvIgwuJGg4y6jE4eZaUEHhG1BE9JFadU1jPk7+umuKhNqyVnR7Yci5oYdD3n1195qPI0RK8lB2ax94MbhZvP2ZLgQmso2LvzfjLkSypu8aBqKYPC0FJj92bKyP8Edav8mY6cmImKKgqwdEbYM3SqVb/K4Uuq0ihYcQl4qbrxY2//o7JyaYtbt2nELNbcOsWtUC1NOwIwbbNhHIcp9YccGaKi2VWD//W1OOH7afDgzkO/Rh0q8o6nG+e+sYGwtfY5tLF1bC28/KGVw4uaUvjt6XsHaOSdkmfJuancNcFcIwlSYxm0Vwl2L+vr/EGBRrjcVWDuB+govKVtbJpSxo5Un4x6BGo/9x4mrt2Ycy8CBPWSoAvfQyEMr6Ora+xRsgSfSLnFRlEnaImKPF5IGwEwUyvkx/Z87pmP+dwS3mrh5Ctvb7z5VlPYhgQpVErARaNbEb6Z8rR7vp1HIY2dtPdV00BC1qP2ebOInOOfwUOm97N8ON/FtMbG9/A2OakSnDicDConaYLljgu34zicst0iWd3sM4fkJJ/XKr1xxvL/k/34ozw=
   - secure: 2sK/3Z/q0UpcYRzyzl/bVVm5bP2uJLwhtehFH6KXCn648NkkrXdkr3BPFcobddt7z/i+eCR1iU4Xpt0pC1YUb1ib6Q24wTMr2umFp9LuC7ahTIwCt4s73xhmxNHAudYwSbX9T2LcOLoyR+bfjh6gFS5uCLWigpe+pB7rT0l3IUf2ci2bhom5dGGSzANYkg8AMOAsRyjQNlbdIRn3TpnYx0QkmwWGdxDOMBOdFmdexUfca59rN/Ccg1y16RAlZkkNZDPBYH+43xxq79RNG5xcjt6cAiyQjFAnX57r/JTe9M6/fu/Q0tUFmeG1/Fv/cWv7l40WXvEZoLOPsiqnGV4vPrgcJJ/n0dnTTO7oBP4K7ZazhHuXifAsDu2Q3eGDGQM8lQRvABJokXFZqEmoHqiRmqMVYRjIFHEclmWlFMM40Y5dU83qo1t2ni5ITe1WyPmn1av3WWn5EL436+Ng0Meigph//y493w7G3iij4LC4Mow8+ucT9De0iY3vf5Fqb1wYkQveaIZNk0zEI43irDQIwDpIBHpHDVu7dC9auuCPUWbuacd9QbIksiI1n61VQysQ1kH1ewy6kdL61AFbA9kvZQiW4kKHRUSH3HKEKuWpvhZatt3Pb67cRgzhiuSzthzmQVzLwBTYAaUW1+16SvUVyFvingTQPULJL8nW4asxgYs=
+
+cache:
+- bundler
+
+before_install:
+- rvm install ruby-2.3.0
+- openssl aes-256-cbc -K $encrypted_a318a1fa7ccb_key -iv $encrypted_a318a1fa7ccb_iv
+  -in deployment_key.gpg.enc -out deployment_key.gpg -d
+install:
+- bundle install
+
+android:
+  components:
+  - tools
+  - platform-tools
+  - build-tools-24.0.2
+  - extra-android-m2repository
+  - $ANDROID_TARGET
+  - sys-img-armeabi-v7a-$ANDROID_TARGET
+
+before_script:
+  - echo no | android create avd --force -n test -t $ANDROID_TARGET --abi $ANDROID_ABI
+  - emulator -avd test -no-skin -no-audio -no-window &
+  - adb wait-for-device
+  - adb shell input keyevent 82 &
+script:
+- bundle exec fastlane ci
