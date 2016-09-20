@@ -17,7 +17,7 @@ before_install:
 install:
 - bundle install
 before_script:
-- echo no | android create avd --force -n test22 -t android-22 --abi armeabi-v7a
+- echo no | android create avd --force -n test22 -t android-21 --abi armeabi-v7a
 - echo no | android create avd --force -n test18 -t android-18 --abi armeabi-v7a
 - echo no | android create avd --force -n test15 -t android-15 --abi armeabi-v7a
 - emulator -avd test22 -no-audio -no-window &
