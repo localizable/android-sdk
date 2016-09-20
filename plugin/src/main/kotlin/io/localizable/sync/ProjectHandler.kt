@@ -1,24 +1,22 @@
-package io.localizable.uploader
+package io.localizable.sync
 
 import com.android.build.gradle.AppExtension
 import com.android.build.gradle.AppPlugin
 import com.android.build.gradle.internal.dsl.BuildType
-import io.localizable.uploader.helper.LocalizableHelper
+import io.localizable.sync.helper.LocalizableHelper
 import org.gradle.api.Project
 import org.gradle.api.Task
 import org.gradle.api.tasks.TaskContainer
 
 class ProjectHandler(val project: Project) {
 
-    private val isAndroidProject: Boolean
-        get() {
-            return project.plugins.hasPlugin(AppPlugin::class.java)
-        }
+    private val isAndroidProject: Boolean by lazy {
+        project.plugins.hasPlugin(AppPlugin::class.java)
+    }
 
-    private val appExtension: AppExtension
-        get() {
-            return  project.extensions.getByType(AppExtension::class.java)
-        }
+    private val appExtension: AppExtension by lazy {
+        project.extensions.getByType(AppExtension::class.java)
+    }
 
     private val flavorNames: List<String> by lazy {
         val configs = appExtension.productFlavors.map { it.name }
@@ -46,10 +44,10 @@ class ProjectHandler(val project: Project) {
             val manifest = LocalizableHelper.manifestFileForTarget(project, buildName, flavorName)
             if (manifest == null) {
                 println("Could not find any manifest file")
-              return@doFirst
+                return@doFirst
             }
 
-          nTask.didWork = LocalizableTask(project, manifest, localizableTaskName).syncResources()
+            nTask.didWork = LocalizableTask(project, manifest, localizableTaskName).syncResources()
         }
 
         task.dependsOn(nTask)

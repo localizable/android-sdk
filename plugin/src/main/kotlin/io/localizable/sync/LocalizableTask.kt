@@ -1,12 +1,17 @@
-package io.localizable.uploader
+package io.localizable.sync
 
-import io.localizable.uploader.extensions.resourcesFolders
-import io.localizable.uploader.helper.LocalizableHelper
-import io.localizable.uploader.helper.loadFile
-import io.localizable.uploader.helper.storeToFile
-import io.localizable.uploader.model.*
-import io.localizable.uploader.networking.Network
-import io.localizable.uploader.xml.ManifestFileHandler
+import io.localizable.sync.extensions.resourcesFolders
+import io.localizable.sync.model.App
+import io.localizable.sync.model.LanguageDelta
+import io.localizable.sync.model.LanguageStrings
+import io.localizable.sync.model.ResourceFolder
+import io.localizable.sync.helper.LocalizableHelper
+import io.localizable.sync.helper.loadFile
+import io.localizable.sync.helper.storeToFile
+import io.localizable.sync.model.LocalizedString
+import io.localizable.sync.model.UploadStringsRequestBody
+import io.localizable.sync.networking.Network
+import io.localizable.sync.xml.ManifestFileHandler
 import org.gradle.api.Project
 import retrofit2.Call
 import retrofit2.Callback

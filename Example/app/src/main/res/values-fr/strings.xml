@@ -4,6 +4,5 @@
     <string name="action_settings">Le Preferences</string>
     <string name="goodbye">Adieu</string>
     <string name="hello">Salut</string>
-    <string name="poop">Le poop!!!!</string>
     <string name="greeting_message">Salutations %1$s!</string>
 </resources>

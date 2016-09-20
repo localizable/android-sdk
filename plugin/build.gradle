@@ -1,8 +1,6 @@
 apply plugin: "kotlin"
 
 dependencies {
-  testCompile 'junit:junit:4.11'
-
   compile gradleApi()
 
   compile ANDROID_BUILD_TOOLS_VERSION
@@ -24,5 +22,20 @@ buildscript {
     classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
   }
 }
+
+/* apply plugin: 'maven'
+
+uploadArchives {
+  repositories {
+    mavenDeployer {
+      repository(url: mavenLocal().url)
+      pom.groupId = GROUP_ID
+      pom.artifactId = ARTIFACT_PLUGIN_ID
+      pom.version = PLUGIN_VERSION
+    }
+  }
+}
+
+*/
 
 apply from: 'gradle/deploy.gradle'

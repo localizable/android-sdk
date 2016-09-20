@@ -1,4 +1,4 @@
-package io.localizable.uploader.extensions
+package io.localizable.sync.extensions
 
 import org.gradle.api.Project
 import java.io.File

@@ -1,6 +1,9 @@
-package io.localizable.uploader.model
+package io.localizable.sync.model
 
-class LanguageDelta(languageCode: String, updatedStrings: List<LocalizedString>, removedStrings: List<LocalizedString>) {
+import io.localizable.sync.model.LanguageStrings
+import io.localizable.sync.model.LocalizedString
+
+class LanguageDelta(languageCode: String, updatedStrings: List<io.localizable.sync.model.LocalizedString>, removedStrings: List<io.localizable.sync.model.LocalizedString>) {
 
   var code: String
   var update: Map<String, String>
@@ -19,16 +22,16 @@ class LanguageDelta(languageCode: String, updatedStrings: List<LocalizedString>,
   }
 
   companion object {
-    private fun mergeLanguages(currentStrings: List<LanguageStrings>, cachedStrings: List<LanguageStrings>):
-        List<Triple<String, List<LocalizedString>, List<LocalizedString>>> {
+    private fun mergeLanguages(currentStrings: List<io.localizable.sync.model.LanguageStrings>, cachedStrings: List<io.localizable.sync.model.LanguageStrings>):
+        List<Triple<String, List<io.localizable.sync.model.LocalizedString>, List<io.localizable.sync.model.LocalizedString>>> {
       val tmpCurrentStrings = currentStrings.toMutableList()
       val tmpCachedStrings = cachedStrings.toMutableList()
-      val result = mutableListOf<Triple<String, List<LocalizedString>, List<LocalizedString>>>()
+      val result = mutableListOf<Triple<String, List<io.localizable.sync.model.LocalizedString>, List<io.localizable.sync.model.LocalizedString>>>()
 
       tmpCurrentStrings.forEach { currentItem ->
         val language = currentItem.language
         val current = currentItem.strings
-        val cached = mutableListOf<LocalizedString>()
+        val cached = mutableListOf<io.localizable.sync.model.LocalizedString>()
         val matches = tmpCachedStrings.filter { it.language == language }
         matches.forEach {
           cached.addAll(it.strings)
@@ -44,7 +47,7 @@ class LanguageDelta(languageCode: String, updatedStrings: List<LocalizedString>,
       return result
     }
 
-    fun deltasFromLanguages(currentStrings: List<LanguageStrings>, cachedStrings: List<LanguageStrings>): List<LanguageDelta> {
+    fun deltasFromLanguages(currentStrings: List<io.localizable.sync.model.LanguageStrings>, cachedStrings: List<io.localizable.sync.model.LanguageStrings>): List<LanguageDelta> {
       val mergedLanguages = mergeLanguages(currentStrings, cachedStrings)
 
       val result = mutableListOf<LanguageDelta>()

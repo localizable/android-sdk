@@ -28,6 +28,12 @@ android {
       minifyEnabled false
     }
   }
+
+  android {
+    lintOptions {
+      abortOnError false
+    }
+  }
 }
 
 dependencies {
@@ -42,5 +48,19 @@ dependencies {
   compile 'org.ligboy.retrofit2:converter-fastjson-android:2.1.0'
   compile 'com.squareup.okhttp3:logging-interceptor:3.4.1'
 }
+
+
+/* apply plugin: 'maven'
+
+uploadArchives {
+  repositories {
+    mavenDeployer {
+      repository(url: mavenLocal().url)
+      pom.groupId = GROUP_ID
+      pom.artifactId = ARTIFACT_SDK_ID
+      pom.version = SDK_VERSION
+    }
+  }
+} */
 
 apply from: 'gradle/deploy.gradle'

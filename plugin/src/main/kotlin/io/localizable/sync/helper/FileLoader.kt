@@ -1,6 +1,6 @@
-package io.localizable.uploader.helper
+package io.localizable.sync.helper
 
-import io.localizable.uploader.model.LanguageStrings
+import io.localizable.sync.model.LanguageStrings
 import java.io.*
 
 @Suppress("UNCHECKED_CAST")

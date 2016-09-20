@@ -4,6 +4,5 @@
     <string name="action_settings">Settings</string>
     <string name="goodbye">Goodbye</string>
     <string name="hello">Hello</string>
-    <string name="poop">Poopie EN</string>
     <string name="greeting_message">Welcome %1$s!</string>
 </resources>

@@ -1,11 +1,9 @@
-package io.localizable.uploader.networking
+package io.localizable.sync.networking
 
-import io.localizable.uploader.model.LanguageDelta
-import io.localizable.uploader.model.UploadStringsRequestBody
+import io.localizable.sync.model.UploadStringsRequestBody
 import retrofit2.Call
 import retrofit2.http.Body
 import retrofit2.http.Header
-import retrofit2.http.HeaderMap
 import retrofit2.http.POST
 
 

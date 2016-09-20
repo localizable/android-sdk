@@ -1,4 +1,4 @@
-package io.localizable.uploader.model
+package io.localizable.sync.model
 
 import java.io.Serializable
 

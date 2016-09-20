@@ -1,6 +1,6 @@
-package io.localizable.uploader.xml
+package io.localizable.sync.xml
 
-import io.localizable.uploader.model.LocalizedString
+import io.localizable.sync.model.LocalizedString
 import org.xml.sax.Attributes
 import org.xml.sax.helpers.DefaultHandler
 

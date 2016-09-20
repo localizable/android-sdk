@@ -1,4 +1,4 @@
-package io.localizable.uploader.networking
+package io.localizable.sync.networking
 
 import okhttp3.OkHttpClient
 import retrofit2.Retrofit

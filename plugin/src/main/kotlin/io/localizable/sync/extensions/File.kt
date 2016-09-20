@@ -1,4 +1,4 @@
-package io.localizable.uploader.extensions
+package io.localizable.sync.extensions
 
 import org.xml.sax.helpers.DefaultHandler
 import java.io.File

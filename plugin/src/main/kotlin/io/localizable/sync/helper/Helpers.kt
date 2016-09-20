@@ -1,10 +1,10 @@
-package io.localizable.uploader.helper
+package io.localizable.sync.helper
 
-import io.localizable.uploader.extensions.loadXMLFileWithHandler
-import io.localizable.uploader.model.LanguageStrings
-import io.localizable.uploader.model.ResourceFolder
-import io.localizable.uploader.xml.ManifestFileHandler
-import io.localizable.uploader.xml.ResourcesFileHandler
+import io.localizable.sync.extensions.loadXMLFileWithHandler
+import io.localizable.sync.model.LanguageStrings
+import io.localizable.sync.model.ResourceFolder
+import io.localizable.sync.xml.ManifestFileHandler
+import io.localizable.sync.xml.ResourcesFileHandler
 import org.gradle.api.Project
 import java.io.File
 
