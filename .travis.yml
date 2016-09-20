@@ -2,11 +2,6 @@ language: android
 jdk: oraclejdk8
 cache:
 - bundler
-env:
-    matrix:
-    - ANDROID_SDKS=android-21            ANDROID_TARGET=android-21   ANDROID_ABI=armeabi-v7a
-    - ANDROID_SDKS=android-18            ANDROID_TARGET=android-18   ANDROID_ABI=armeabi-v7a
-    - ANDROID_SDKS=android-15            ANDROID_TARGET=android-15   ANDROID_ABI=armeabi-v7a
 android:
   components:
   - tools
@@ -29,6 +24,10 @@ before_script:
 script:
 - bundle exec fastlane ci
 env:
+  matrix:
+  - ANDROID_SDKS=android-21  ANDROID_TARGET=android-21  ANDROID_ABI=armeabi-v7a
+  - ANDROID_SDKS=android-18  ANDROID_TARGET=android-18  ANDROID_ABI=armeabi-v7a
+  - ANDROID_SDKS=android-15  ANDROID_TARGET=android-15  ANDROID_ABI=armeabi-v7a
   global:
   - secure: bT3WN6aYzArs00euFTUeXxLGw2gvArD6YOYp0AnXDv8o9VuvNMk7uJqla1JYok7Nc8VRGrFzzxYta91vz+rXWjWib/D9oA27tT2Ha3InI49vE33RJqSoWVi3AwX7XgIIaEtr3k+hb0ganbDaEgUxWuW2A1xCHaUBKQ7CBXi1SpkSYMMq4/2oRTd5KB/HFlWa7iEiIqBEcybNyHZjiP55EnvLZ9HmHuZAIIi9q3g5Rt6DUgbVQ/esVIp6xNfsXgICevLgY37Kb2I4gHMWrjb38HZbxjklyTpdcxGFxGj2PDHM+BZiQ0upsuEowjxMQBPjxj5dRIpNzBoTAyeD4zVCtl41JbE/k0wVMQ4b9CPxVlAKnI00xPGQSNDEquG0N2n/7SyGayJi95LqVTFRwIQoeyItZd9Ns7MPkNPlTq1lipTNyDRPElTtXOE78BD7vuCRqBaO9zO7V3Z7nfF8oj2lUb4kH2PG9P7RJkDbdceQJ7cU5WUdqfdYiAdBma+/MopGXd4nlu/eBGIJP7W6V3zt1Wwnctc+THTJX9LNe1PzEqoC2+xBi6R51kx0V1Oqjxil6kTeqYezqAEIPZPZltGgZUDXmvo1ivpO5rBFaMWE6699xbHqti3M8Ro3G5LdybWEUF2XpCiBU3v0QT3+fio8FYaSJm/phHG83Mh0TxTSQMY=
   - secure: RocRBr2D4Hyfajx9XhhasGpbDTKKmR1+0uLGP/OPjGXLMlhjaBYBB9ch37P1NFJdZkpaw2b7mz3/6oBtub4t0hIJDU6GLfnINpGwZh3pJA/nqmvuAhOZy/h7IIDzrUohwvOPfPuG7Ae0n3j1FCizktBJGC/tIpDQ/9SfNNFVvh7gIt0Rr7PMVJb6xK2jHJbO1cIkOXmPeviS+7gs6df/2eaqZQQX2yMDNeTCA4u9//6PPsQ45T6xJVYfPe0WGluK/nMdZQLHPzEiYatP0Kj24vKWUT4IQcakGTz5S227cswH4A0H3pwC5sRECOX7R0qHwxwoZw/FO8067yCHcZdSL+EXS/F2BTIfhHpP7QsgRiYTXmTTk8BEme/l/uyg/TVJl6NUKhnHLGztSZYTSDR0j+u3yRouCK9HBSNVFjlpAd62LVZoY44PSM44MvAF4233Ohb/SrVYE48wBssunUZp1YjgRl8oYdqhi5+j48kb+aoT67Ps1ULOPUEBwD2vN8gDpoyqAnq9kYF7+ekUBf6vGwAu8I4zNYZZNGZSvxy8jKvT5bvfNCJCfWvbZzdkh1Fu4k/QQQQT263ZlPfHwzmAIsmDjpOBxos4WnTcVwGHScN8VNSTKcuV+JdLMvgGoUYrik27vfRmzrul0O8XUVJj3RZfKS+2T/f4glX8NJTEyPk=
