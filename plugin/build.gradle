@@ -12,7 +12,7 @@ dependencies {
 }
 
 buildscript {
-  ext.kotlin_version = '1.0.3'
+  ext.kotlin_version = '1.0.4'
 
   repositories {
     mavenCentral()
@@ -23,19 +23,25 @@ buildscript {
   }
 }
 
-/* apply plugin: 'maven'
+task deploy() {
+  deployToProduction(DEPLOY_TO_PRODUCTION)
+  project."deploy".dependsOn("uploadArchives")
+}
 
-uploadArchives {
-  repositories {
-    mavenDeployer {
-      repository(url: mavenLocal().url)
-      pom.groupId = GROUP_ID
-      pom.artifactId = ARTIFACT_PLUGIN_ID
-      pom.version = PLUGIN_VERSION
+def deployToProduction(production) {
+  if (production) {
+    apply from: 'gradle/deploy.gradle'
+  } else {
+    apply plugin: 'maven'
+    uploadArchives {
+      repositories {
+        mavenDeployer {
+          repository(url: mavenLocal().url)
+          pom.groupId = GROUP_ID
+          pom.artifactId = ARTIFACT_PLUGIN_ID
+          pom.version = PLUGIN_VERSION
+        }
+      }
     }
   }
 }
-
-*/
-
-apply from: 'gradle/deploy.gradle'

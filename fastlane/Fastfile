@@ -11,7 +11,7 @@
 
 # This is the minimum version number required.
 # Update this, if you use features of a newer version
-fastlane_version "1.103.0"
+fastlane_version "1.104.0"
 
 default_platform :android
 
@@ -26,10 +26,7 @@ platform :android do
   desc "Master commit"
   lane :ci do
     test_sdk
-    deploy_sdk
-    deploy_plugin
   end
-
 
   desc "Runs all the SDK tests"
   lane :test_sdk do
@@ -37,11 +34,11 @@ platform :android do
   end
 
   lane :deploy_sdk do
-    gradle(task: "sdk:uploadArchives")
+    gradle(task: "sdk:deploy")
   end
 
   lane :deploy_plugin do
-    gradle(task: "plugin:uploadArchives")
+    gradle(task: "plugin:deploy")
   end
 
   # You can define as many lanes as you want

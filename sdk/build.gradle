@@ -54,18 +54,25 @@ dependencies {
   compile 'com.squareup.okhttp3:logging-interceptor:3.4.1'
 }
 
+task deploy() {
+  deployToProduction(DEPLOY_TO_PRODUCTION)
+  project."deploy".dependsOn("uploadArchives")
+}
 
-/* apply plugin: 'maven'
-
-uploadArchives {
-  repositories {
-    mavenDeployer {
-      repository(url: mavenLocal().url)
-      pom.groupId = GROUP_ID
-      pom.artifactId = ARTIFACT_SDK_ID
-      pom.version = SDK_VERSION
+def deployToProduction(production) {
+  if (production) {
+    apply from: 'gradle/deploy.gradle'
+  } else {
+    apply plugin: 'maven'
+    uploadArchives {
+      repositories {
+        mavenDeployer {
+          repository(url: mavenLocal().url)
+          pom.groupId = GROUP_ID
+          pom.artifactId = ARTIFACT_PLUGIN_ID
+          pom.version = PLUGIN_VERSION
+        }
+      }
     }
   }
-} */
-
-apply from: 'gradle/deploy.gradle'
+}
